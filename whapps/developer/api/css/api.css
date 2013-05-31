@@ -113,7 +113,6 @@
 	float: left;
 }
 
-
 .info-popup {
 	background: none;
 }
@@ -121,3 +120,116 @@
 .info-popup .main_content {
 	width: auto;
 }
+
+/******************* NEW DEV TOOL CODE (JoshS) ********************/
+
+#dev_home {
+	width: 85%;
+	margin-left: 49px !important;		
+}
+
+#dev_intro {
+	padding-top: 40px;
+	margin-bottom: 70px;
+}
+
+#dev_intro p {
+	font-size: 14px;
+	font-weight: lighter;
+	line-height: 20px;
+	text-shadow: 1px 2px #363636;
+	margin-bottom: 9px;
+}
+
+table#choose_api {
+	width: 1000px;
+}
+
+table#choose_api td{
+	border: none;
+	padding: 0 40px 40px 0px;
+}
+
+.api_btn {
+	position: relative;
+	background-color: #333333;
+	width: 175px;
+	height: 150px;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+}
+
+.api_btn:hover {
+	background: #333333; /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover, #333333 20%, #282828 100%); /* FF3.6+ */
+	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(20%,#333333), color-stop(100%,#282828)); /* Chrome,Safari4+ */
+	background: -webkit-radial-gradient(center, ellipse cover, #333333 20%,#282828 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-radial-gradient(center, ellipse cover, #333333 20%,#282828 100%); /* Opera 12+ */
+	background: -ms-radial-gradient(center, ellipse cover, #333333 20%,#282828 100%); /* IE10+ */
+	background: radial-gradient(ellipse at center, #333333 20%,#282828 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#333333', endColorstr='#282828',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
+	-moz-box-shadow: inset 0 0 0px 1px #05ADDC;
+	-webkit-box-shadow: inset 0 0 0px 1px #05ADDC;
+	box-shadow: inset 0 0 0px 1px #05ADDC;
+}
+
+.api_btn:hover .api_name {
+	color: #05ADDC;
+}
+
+.api_btn a {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+}
+
+.icon_wrap {
+	text-align: center;
+}
+
+.api_icon {
+	display: inline-block;
+	width: 100px;
+	height: 75px;
+	background-image: url(../API_IconSheet.png);
+	background-repeat: no-repeat;
+	margin-top: 20px;
+}
+
+.api_name {
+	text-align: center;
+	padding-top: 25px;
+	font-weight: lighter;
+	color: #cccccc;
+}
+
+.api_icon.accounts {}
+.api_icon.callflows { background-position: -100px 0px; }
+.api_icon.conferences { background-position: -200px 0px; }
+.api_icon.devices { background-position: -300px 0px; }
+.api_icon.directories { background-position: -400px 0px; }
+.api_icon .global_resources {}
+.api_icon .limits {}
+.api_icon .local_resources {}
+.api_icon .media {}
+.api_icon .menus {}
+.api_icon .phone_numbers {}
+.api_icon .queues {}
+.api_icon .servers {}
+.api_icon .temporal_rules {}
+.api_icon .user_auth {}
+.api_icon .users {}
+.api_icon .voicemail_box {}
+
+
+
+
+
+
+
+
+
