@@ -124,8 +124,8 @@
 /******************* NEW DEV TOOL CODE (JoshS) ********************/
 
 #dev_home {
-	margin: auto;
-	width: 1000px;
+	margin: 0 0 0 49px;
+	width: 1040px;
 }
 
 #dev_intro {
@@ -155,7 +155,7 @@ table#choose_api td{
 	border-radius: 5px;
 	display: inline-block;
 	height: 150px;
-	margin: 10px;
+	margin: 0 30px 30px 0;
 	position: relative;
 	width: 175px;
 	-webkit-border-radius: 5px;
@@ -209,23 +209,23 @@ table#choose_api td{
 	color: #cccccc;
 }
 
-.api_icon.accounts {}
+.api_icon.accounts { background-position: 0 0; }
 .api_icon.callflows { background-position: -100px 0px; }
 .api_icon.conferences { background-position: -200px 0px; }
 .api_icon.devices { background-position: -300px 0px; }
 .api_icon.directories { background-position: -400px 0px; }
-.api_icon .global_resources {}
-.api_icon .limits {}
-.api_icon .local_resources {}
-.api_icon .media {}
-.api_icon .menus {}
-.api_icon .phone_numbers {}
-.api_icon .queues {}
-.api_icon .servers {}
-.api_icon .temporal_rules {}
-.api_icon .user_auth {}
-.api_icon .users {}
-.api_icon .voicemail_box {}
+.api_icon.global_resources { background-position: -500px 0px; }
+.api_icon.limits { background-position: -600px 0px; }
+.api_icon.local_resources { background-position: 0 -75px; }
+.api_icon.media { background-position: -100px -75px; }
+.api_icon.menus { background-position: -200px -75px; }
+.api_icon.phone_numbers { background-position: -300px -75px; }
+.api_icon.queues { background-position: -400px -75px; }
+.api_icon.servers { background-position: -500px -75px; }
+.api_icon.temporal_rules { background-position: -600px -75px; }
+.api_icon.user_auth { background-position: 0 -150px; }
+.api_icon.users { background-position: -100px -150px; }
+.api_icon.vmboxes { background-position: -200px -150px; }
 
 
 
