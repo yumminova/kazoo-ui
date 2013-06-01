@@ -1,186 +1,33 @@
 <div>
     <div id="api-content" class="container-fluid page">
-        <div id="api-listpanel" class="sidebar list_panel" style="display: none;"></div> <!-- move this to [.content > #api-view .main_content] section?? -->
-
         <div id="dev_home">
         	<div id="dev_intro">
             	<h1>The Power of Kazoo...At Your Fingertips</h1>
             	<p>Welcome to the Kazoo Developer Tool. Everything you need to explore the Kazoo APIs can be found here. <br>
             	   To get started, select one of the APIs below.</p>
             </div>
-		
-            <table id="choose_api">
-            	<tr>
-            		<td>
-            			<div class="api_btn">
-            				<a href="#"></a>
-            				<div class="icon_wrap">
-	            				<span class="api_icon accounts"></span>
-	            			</div>
-	            			<div class="api_name">Accounts</div>
-            			</div>
-            		</td>
-            		<td>
-            			<div class="api_btn">
-            				<a href="#"></a>
-	            			<div class="icon_wrap">
-	            				<span class="api_icon callflows"></span>
-	            			</div>
-	            			<div class="api_name">Callflows</div>
-            			</div>
-            		</td>
-            		<td>
-            			<div class="api_btn">
-            				<a href="#"></a>
-	            			<div class="icon_wrap">
-	            				<span class="api_icon conferences"></span>
-	            			</div>
-	            			<div class="api_name">Conferences</div>
-            			</div>
-            		</td>
-            		<td>
-            			<div class="api_btn">
-            				<a href="#"></a>
-	            			<div class="icon_wrap">
-	            				<span class="api_icon devices"></span>
-	            			</div>
-	            			<div class="api_name">Devices</div>
-            			</div>
-            		</td>
-            		<td>
-            			<div class="api_btn">
-            				<a href="#"></a>
-	            			<div class="icon_wrap">
-	            				<span class="api_icon directories"></span>
-	            			</div>
-	            			<div class="api_name">Directories</div>
-            			</div>
-            		</td>
-            	</tr>
 
-			<tr>
-            		<td>
-            			<div class="api_btn">
-            				<a href="#"></a>
-	            			<div class="icon_wrap">
-	            				<span class="api_icon global_resources"></span>
-	            			</div>
-	            			<div class="api_name">Global Resources</div>
-            			</div>
-            		</td>
-            		<td>
-            			<div class="api_btn">
-            				<a href="#"></a>
-	            			<div class="icon_wrap">
-	            				<span class="api_icon limits"></span>
-	            			</div>
-	            			<div class="api_name">Limits</div>
-            			</div>
-            		</td>
-            		<td>
-            			<div class="api_btn">
-            				<a href="#"></a>
-	            			<div class="icon_wrap">
-	            				<span class="api_icon local_resources"></span>
-	            			</div>
-	            			<div class="api_name">Local Resources</div>
-            			</div>
-            		</td>
-            		<td>
-            			<div class="api_btn">
-            				<a href="#"></a>
-	            			<div class="icon_wrap">
-	            				<span class="api_icon media"></span>
-	            			</div>
-	            			<div class="api_name">Media</div>
-            			</div>
-            		</td>
-            		<td>
-            			<div class="api_btn">
-            				<a href="#"></a>
-	            			<div class="icon_wrap">
-	            				<span class="api_icon menus"></span>
-	            			</div>
-	            			<div class="api_name">Menus</div>
-            			</div>
-            		</td>
-			</tr>
-
-			<tr>
-            		<td>
-            			<div class="api_btn">
-            				<a href="#"></a>
-	            			<div class="icon_wrap">
-	            				<span class="api_icon phone_numbers"></span>
-	            			</div>
-	            			<div class="api_name">Phone Numbers</div>
-            			</div>
-            		</td>
-            		<td>
-            			<div class="api_btn">
-            				<a href="#"></a>
-	            			<div class="icon_wrap">
-	            				<span class="api_icon queues"></span>
-	            			</div>
-	            			<div class="api_name">Queues</div>
-            			</div>
-            		</td>
-            		<td>
-            			<div class="api_btn">
-            				<a href="#"></a>
-	            			<div class="icon_wrap">
-	            				<span class="api_icon servers"></span>
-	            			</div>
-	            			<div class="api_name">Servers</div>
-            			</div>
-            		</td>
-            		<td>
-            			<div class="api_btn">
-            				<a href="#"></a>
-	            			<div class="icon_wrap">
-	            				<span class="api_icon temporal_rules"></span>
-	            			</div>
-	            			<div class="api_name">Temporal Rules</div>
-            			</div>
-            		</td>
-            		<td>
-            			<div class="api_btn">
-            				<a href="#"></a>
-	            			<div class="icon_wrap">
-	            				<span class="api_icon user_auth"></span>
-	            			</div>
-	            			<div class="api_name">User Auth</div>
-            			</div>
-            	</td>
-			</tr>
-
-				<tr>
-            		<td>
-            			<div class="api_btn">
-            				<a href="#"></a>
-	            			<div class="icon_wrap">
-	            				<span class="api_icon users"></span>
-	            			</div>
-	            			<div class="api_name">Users</div>
-            			</div>
-            		</td>
-            		<td>
-            			<div class="api_btn">
-            				<a href="#"></a>
-	            			<div class="icon_wrap">
-	            				<span class="api_icon voicemail_box"></span>
-	            			</div>
-	            			<div class="api_name">Voicemail Box</div>
-            			</div>
-            		</td>
-            	</tr>
-            </table>
-		</div> <!-- END dev_home -->
-        
-		<div class="content">
-            <div id="api-view" class="main_content">
-            	
+			<div id="selectionScreen">
+				{{each(key, value) schema}}
+					<div class="api-btn">
+                        <a href="#"></a>
+                        <div class="icon_wrap">
+                            <span class="api_icon ${value.id}"></span>
+                        </div>
+                        <div class="api_name">${value.title}</div>
+                    </div>
+				{{/each}}
 			</div>
-        </div>
+		</div> <!-- END dev_home -->
+
+		<div id="specificApi" style="display: none">
+        	<div id="api-listpanel" class="sidebar list_panel"></div> <!-- move this to [.content > #api-view .main_content] section?? -->
+
+			<div class="content">
+            	<div id="api-view" class="main_content">
+
+				</div>
+        	</div>
+		</div>
     </div>
 </div>

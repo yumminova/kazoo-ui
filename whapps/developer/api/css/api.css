@@ -26,7 +26,7 @@
 #api-view h1 > small {
 	font-size: 12px;
 	margin-left: 10px;
-} 
+}
 
 #api-view .hide {
 	display: none;
@@ -124,8 +124,8 @@
 /******************* NEW DEV TOOL CODE (JoshS) ********************/
 
 #dev_home {
-	width: 85%;
-	margin-left: 49px !important;		
+	margin: auto;
+	width: 1000px;
 }
 
 #dev_intro {
@@ -150,17 +150,19 @@ table#choose_api td{
 	padding: 0 40px 40px 0px;
 }
 
-.api_btn {
-	position: relative;
+.api-btn {
 	background-color: #333333;
-	width: 175px;
-	height: 150px;
 	border-radius: 5px;
+	display: inline-block;
+	height: 150px;
+	margin: 10px;
+	position: relative;
+	width: 175px;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 }
 
-.api_btn:hover {
+.api-btn:hover {
 	background: #333333; /* Old browsers */
 	background: -moz-radial-gradient(center, ellipse cover, #333333 20%, #282828 100%); /* FF3.6+ */
 	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(20%,#333333), color-stop(100%,#282828)); /* Chrome,Safari4+ */
@@ -175,11 +177,11 @@ table#choose_api td{
 	box-shadow: inset 0 0 0px 1px #05ADDC;
 }
 
-.api_btn:hover .api_name {
+.api-btn:hover .api_name {
 	color: #05ADDC;
 }
 
-.api_btn a {
+.api-btn a {
 	position: absolute;
 	width: 100%;
 	height: 100%;

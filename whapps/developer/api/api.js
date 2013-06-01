@@ -375,6 +375,28 @@ winkstart.module('developer', 'api', {
             }
         },
 
+		format_list: function(data) {
+			var THIS = this,
+				new_list = [];
+
+            if(data.length > 0) {
+                $.each(data, function(key, val) {
+                    if(THIS.apis[val]) {
+                        new_list.push({
+                            id: val,
+                            title: THIS.apis[val].title || '(name)'
+                        });
+                    }
+                });
+            }
+
+            new_list.sort(function(a, b) {
+                return a.title.toLowerCase() < b.title.toLowerCase() ? -1 : 1;
+            });
+
+            return new_list;
+		},
+
         render_list: function(parent) {
             var THIS = this;
 
@@ -382,34 +404,13 @@ winkstart.module('developer', 'api', {
                     api_url: winkstart.apps['developer'].api_url
                 },
                 function(data, status) {
-                    var map_crossbar_data = function(data) {
-                        var new_list = [];
-
-                        if(data.length > 0) {
-                            $.each(data, function(key, val) {
-                                if(THIS.apis[val]) {
-                                    new_list.push({
-                                        id: val,
-                                        title: THIS.apis[val].title || '(name)'
-                                    });
-                                }
-                            });
-                        }
-
-                        new_list.sort(function(a, b) {
-                            return a.title.toLowerCase() < b.title.toLowerCase() ? -1 : 1;
-                        });
-
-                        return new_list;
-                    };
-
                     $('#api-listpanel', parent)
                         .empty()
                         .listpanel({
                             label: 'APIs Developer',
                             identifier: 'api-listview',
                             new_entity_label: 'APIs Developer',
-                            data: map_crossbar_data(data.data),
+                            data: THIS.format_list(data.data),
                             publisher: winkstart.publish,
                             notifyMethod: 'api.render',
                             notifyCreateMethod: '',
@@ -420,14 +421,22 @@ winkstart.module('developer', 'api', {
         },
 
         activate: function(parent) {
-            var THIS = this,
-               api_html = THIS.templates.api.tmpl();
+            var THIS = this;
 
-            (parent || $('#ws-content'))
-                .empty()
-                .append(api_html);
+			winkstart.request('api.list', {
+                    api_url: winkstart.apps['developer'].api_url
+                },
+                function(data, status) {
+					var template_data = {
+							schema: THIS.format_list(data.data)
+						},
+					    api_html = THIS.templates.api.tmpl(template_data);
 
-            THIS.render_list(api_html);
+            		(parent || $('#ws-content'))
+                		.empty()
+                		.append(api_html);
+				}
+			);
         },
 
         ressources: function() {
