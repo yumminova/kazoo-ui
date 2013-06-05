@@ -375,6 +375,7 @@ winkstart.module('developer', 'api', {
             }
         },
 
+
 		format_list: function(data) {
 			var THIS = this,
 				new_list = [];
@@ -431,6 +432,14 @@ winkstart.module('developer', 'api', {
 							schema: THIS.format_list(data.data)
 						},
 					    api_html = THIS.templates.api.tmpl(template_data);
+
+                        //joshS script attempt
+                        
+                        api_html.find('.api-btn').click(function(){
+                            THIS.render_list(api_html);
+                            api_html.find('#dev_home').hide();
+                            api_html.find('#specificApi').show();
+                        });
 
             		(parent || $('#ws-content'))
                 		.empty()
