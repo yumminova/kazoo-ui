@@ -434,9 +434,11 @@ winkstart.module('developer', 'api', {
 					    api_html = THIS.templates.api.tmpl(template_data);
 
                         //joshS script attempt
-                        
+
                         api_html.find('.api-btn').click(function(){
                             THIS.render_list(api_html);
+                            THIS.render_api({ id: $(this).data('module') });
+
                             api_html.find('#dev_home').hide();
                             api_html.find('#specificApi').show();
                         });

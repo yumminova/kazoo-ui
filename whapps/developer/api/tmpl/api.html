@@ -9,7 +9,7 @@
 
 			<div id="selectionScreen">
 				{{each(key, value) schema}}
-					<div class="api-btn">
+					<div class="api-btn" data-module="${value.id}">
                         <a href="#"></a>
                         <div class="icon_wrap">
                             <span class="api_icon ${value.id}"></span>
@@ -20,7 +20,7 @@
 			</div>
 		</div> <!-- END dev_home -->
 
-		<div id="specificApi" style="display: none">
+		<div id="specificApi" class="container-fluid" style="display: none">
         	<div id="api-listpanel" class="sidebar list_panel"></div> <!-- move this to [.content > #api-view .main_content] section?? -->
 
 			<div class="content">
