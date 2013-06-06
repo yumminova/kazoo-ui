@@ -352,10 +352,21 @@
 
             if(btn.hasClass('activate')) {
                 btn.removeClass('activate');
-                btn.html('Show All');
+                if(!btn.hasClass('unchange')) {
+                    btn.html('Show All');
+                }
             } else {
                 btn.addClass('activate');
-                btn.html('Hide All');
+                if(!btn.hasClass('unchange')) {
+                    btn.html('Hide All');
+                }
+            }
+
+            if(btn.hasClass('toggleWhite')) {
+                btn.removeClass('toggleWhite');
+            }
+            else {
+                btn.addClass('toggleWhite');
             }
         });
 

@@ -398,7 +398,7 @@ winkstart.module('developer', 'api', {
             return new_list;
 		},
 
-        render_list: function(parent) {
+        render_list: function(parent, id) {
             var THIS = this;
 
             winkstart.request(true, 'api.list', {
@@ -417,6 +417,8 @@ winkstart.module('developer', 'api', {
                             notifyCreateMethod: '',
                             notifyParent: parent
                         });
+
+                    $('#' + id, parent).addClass('selected_ListItem'); 
                 }
             );
         },
@@ -433,11 +435,11 @@ winkstart.module('developer', 'api', {
 						},
 					    api_html = THIS.templates.api.tmpl(template_data);
 
-                        //joshS script attempt
-
-                        api_html.find('.api-btn').click(function(){
-                            THIS.render_list(api_html);
-                            THIS.render_api({ id: $(this).data('module') });
+                        //joshS script attempt ***************************
+                        api_html.find('.api-btn').click(function() {
+                            var id = $(this).data('module');
+                            THIS.render_list(api_html, id);
+                            THIS.render_api({'id': id});
 
                             api_html.find('#dev_home').hide();
                             api_html.find('#specificApi').show();
@@ -545,22 +547,22 @@ winkstart.module('developer', 'api', {
 
             THIS.rest = {
                 'get_all': {
-                    btn: 'primary'
+                    btn: 'getAll_btn'
                 },
                 'get': {
-                    btn: 'info',
+                    btn: 'get_btn',
                     'class': ['id']
                 },
                 'put': {
-                    btn: 'success',
+                    btn: 'put_btn',
                     'class': ['schema']
                 },
                 'post': {
-                    btn: '',
+                    btn: 'post_btn',
                     'class': ['id', 'schema']
                 },
                 'delete': {
-                    btn: 'danger',
+                    btn: 'delete_btn',
                     'class': ['id']
                 }
             };

@@ -47,41 +47,39 @@
 }
 
 #api-view .whapp-header {
+	background: #333333;
 	border: 1px solid #252525;
-	border-radius: 4px;
-
-	background: #424242;
-	background: -moz-linear-gradient(top,  #424242 0%, #444444 50%, #464646 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#424242), color-stop(50%,#444444), color-stop(100%,#464646));
-	background: -webkit-linear-gradient(top,  #424242 0%,#444444 50%,#464646 100%);
-	background: -o-linear-gradient(top,  #424242 0%,#444444 50%,#464646 100%);
-	background: -ms-linear-gradient(top,  #424242 0%,#444444 50%,#464646 100%);
-	background: linear-gradient(top,  #424242 0%,#444444 50%,#464646 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#424242', endColorstr='#464646',GradientType=0 );
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	padding: 2px;
 }
 
 #api-view .whapp-header.active {
-	background: #373737;
+	/*background: #373737;
 	background: -moz-linear-gradient(top, #373737 0, #2E2E2E 50%, #2F2F2F 100%);
 	background: -webkit-gradient(linear,left top,left bottom,color-stop(0%, #373737),color-stop(50%, #2E2E2E),color-stop(100%, #2F2F2F));
 	background: -webkit-linear-gradient(top, #373737 0, #2E2E2E 50%, #2F2F2F 100%);
 	background: -o-linear-gradient(top, #373737 0, #2E2E2E 50%, #2F2F2F 100%);
 	background: -ms-linear-gradient(top, #373737 0, #2E2E2E 50%, #2F2F2F 100%);
 	background: linear-gradient(top, #373737 0, #2E2E2E 50%, #2F2F2F 100%);
-	filter: progid:dximagetransform.microsoft.gradient(startColorstr='#373737',endColorstr='#2f2f2f',GradientType=0);
+	filter: progid:dximagetransform.microsoft.gradient(startColorstr='#373737',endColorstr='#2f2f2f',GradientType=0);*/
 }
 
 #api-view .whapp-header small {
+	color: #dedede;
+	font-size: 13px;
 	margin-left: 20px;
-	font-size: 14px;
 }
 
 #api-view .whapp-header small:last-child {
-	margin-left: 0;
+	color: #888888;
 	float: right;
-	margin-top: 6px;
-	margin-right: 20px;
-	color: #0AC9FF;
+	font-size: 12px;
+	letter-spacing: .09em;
+	margin-left: 0;
+	margin-right: 15px;
+	margin-top: 9px;
 }
 
 #api-view .clean {
@@ -216,6 +214,139 @@
 .api_icon.user_auth { background-position: 0 -150px; }
 .api_icon.users { background-position: -100px -150px; }
 .api_icon.vmboxes { background-position: -200px -150px; }
+
+#api-view .unchange {
+	cursor: pointer;
+	color: #999999;
+	text-decoration: none;
+}
+
+#api-view .unchange:hover {
+	color: #ffffff;
+}
+
+#api-view .toggleWhite {
+	color: #ffffff;
+}
+
+.APIrequest_btn {
+	border-radius: 4px;
+	color: #252525;
+	cursor: pointer;
+	display: inline-block;
+	font-size: 13px;
+	font-weight: bold;
+	min-width: 110px;
+	text-align: left;
+	padding: 8px 0 7px 12px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+}
+
+#api-view .whapp-header .getAll_btn {
+	background: #74e007; /* Old browsers */
+	background: -moz-linear-gradient(top, #74e007 25%, #61bc04 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(25%,#74e007), color-stop(100%,#61bc04)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #74e007 25%,#61bc04 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #74e007 25%,#61bc04 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #74e007 25%,#61bc04 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #74e007 25%,#61bc04 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#74e007', endColorstr='#61bc04',GradientType=0 ); /* IE6-9 */
+
+	box-shadow: inset 1px 1px rgba(255,255,255,0.5);
+	-webkit-box-shadow: inset 1px 1px rgba(255,255,255,0.5);
+	-moz-box-shadow: inset 1px 1px rgba(255,255,255,0.5);
+}
+
+#api-view .whapp-header .getAll_btn:hover {
+	box-shadow: inset 1px 1px 10px rgba(0,0,0,0.4);
+	-moz-box-shadow: inset 1px 1px 10px rgba(0,0,0,0.4);
+	-webkit-box-shadow: inset 1px 1px 10px rgba(0,0,0,0.4);
+}
+
+#api-view .whapp-header .get_btn {
+	background: #ccff00; /* Old browsers */
+	background: -moz-linear-gradient(top, #ccff00 25%, #aed805 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(25%,#ccff00), color-stop(100%,#aed805)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #ccff00 25%,#aed805 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #ccff00 25%,#aed805 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #ccff00 25%,#aed805 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #ccff00 25%,#aed805 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ccff00', endColorstr='#aed805',GradientType=0 ); /* IE6-9 */
+
+	box-shadow: inset 1px 1px rgba(255,255,255,0.5);
+	-webkit-box-shadow: inset 1px 1px rgba(255,255,255,0.5);
+	-moz-box-shadow: inset 1px 1px rgba(255,255,255,0.5);
+}
+
+#api-view .whapp-header .get_btn:hover{
+	box-shadow: inset 1px 1px 10px rgba(0,0,0,0.4);
+	-moz-box-shadow: inset 1px 1px 10px rgba(0,0,0,0.4);
+	-webkit-box-shadow: inset 1px 1px 10px rgba(0,0,0,0.4);
+}
+
+#api-view .whapp-header .put_btn {
+	background: #faa61a; /* Old browsers */
+	background: -moz-linear-gradient(top, #faa61a 25%, #da8e0f 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(25%,#faa61a), color-stop(100%,#da8e0f)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #faa61a 25%,#da8e0f 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #faa61a 25%,#da8e0f 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #faa61a 25%,#da8e0f 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #faa61a 25%,#da8e0f 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#faa61a', endColorstr='#da8e0f',GradientType=0 ); /* IE6-9 */	
+
+	box-shadow: inset 1px 1px rgba(255,255,255,0.5);
+	-webkit-box-shadow: inset 1px 1px rgba(255,255,255,0.5);
+	-moz-box-shadow: inset 1px 1px rgba(255,255,255,0.5);
+}
+
+#api-view .whapp-header .put_btn:hover {
+	box-shadow: inset 1px 1px 10px rgba(0,0,0,0.4);
+	-moz-box-shadow: inset 1px 1px 10px rgba(0,0,0,0.4);
+	-webkit-box-shadow: inset 1px 1px 10px rgba(0,0,0,0.4);
+}
+
+#api-view .whapp-header .post_btn {
+	background: #f2701a; /* Old browsers */
+	background: -moz-linear-gradient(top, #f2701a 25%, #d25a0b 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(25%,#f2701a), color-stop(100%,#d25a0b)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #f2701a 25%,#d25a0b 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #f2701a 25%,#d25a0b 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #f2701a 25%,#d25a0b 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #f2701a 25%,#d25a0b 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2701a', endColorstr='#d25a0b',GradientType=0 ); /* IE6-9 */
+
+	box-shadow: inset 1px 1px rgba(255,255,255,0.5);
+	-webkit-box-shadow: inset 1px 1px rgba(255,255,255,0.5);
+	-moz-box-shadow: inset 1px 1px rgba(255,255,255,0.5);
+}
+
+#api-view .whapp-header .post_btn:hover {
+	box-shadow: inset 1px 1px 10px rgba(0,0,0,0.4);
+	-moz-box-shadow: inset 1px 1px 10px rgba(0,0,0,0.4);
+	-webkit-box-shadow: inset 1px 1px 10px rgba(0,0,0,0.4);
+}
+
+#api-view .whapp-header .delete_btn {
+	background: #fa181b; /* Old browsers */
+	background: -moz-linear-gradient(top, #fa181b 25%, #da1416 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(25%,#fa181b), color-stop(100%,#da1416)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #fa181b 25%,#da1416 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #fa181b 25%,#da1416 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #fa181b 25%,#da1416 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #fa181b 25%,#da1416 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fa181b', endColorstr='#da1416',GradientType=0 ); /* IE6-9 */
+
+	box-shadow: inset 1px 1px rgba(255,255,255,0.5);
+	-webkit-box-shadow: inset 1px 1px rgba(255,255,255,0.5);
+	-moz-box-shadow: inset 1px 1px rgba(255,255,255,0.5);
+}
+
+#api-view .whapp-header .delete_btn:hover {
+	box-shadow: inset 1px 1px 10px rgba(0,0,0,0.4);
+	-moz-box-shadow: inset 1px 1px 10px rgba(0,0,0,0.4);
+	-webkit-box-shadow: inset 1px 1px 10px rgba(0,0,0,0.4);
+}
 
 
 

@@ -1,13 +1,14 @@
 <div>
 	<div class="row">
 		<h1 class="api-urls">
-			${title.toUpperCase()}
+			${title}
 			<small>
 				Click to get info ...
 			</small>
 		</h1>
 		<div class="buttons-right">
-			<button class="btn black toggle-all">Show All</button>
+			<!--<button class="btn black toggle-all">Show All</button>-->
+			<a class="toggle-all unchange">Toggle All Methods</a>
 		</div>
 	</div>
 
@@ -15,14 +16,13 @@
 		{{each(i, verb) api.verbs}}
 			<div class="row">
 				<div class="whapp-header">
-					<button class="btn ${rests[verb].btn} toggle" data-toggle="${k}_${verb}">
+					<button class="APIrequest_btn ${rests[verb].btn} toggle" data-toggle="${k}_${verb}">
 						{{if verb == "get_all"}}
-							GET
+							GET (ALL)
 						{{else}}
 							${verb.toUpperCase()}
 						{{/if}}
 					</button>
-					<small>${ressources['developer.' + k + '.' + verb].url.substr(9)}</small>
 					<small>
 						{{if verb == "get_all"}}
 							Get All
@@ -41,6 +41,7 @@
 						{{/if}}
 						${api.title}
 					</small>
+					<small>${ressources['developer.' + k + '.' + verb].url.substr(9)}</small>
 				</div>
 				<div class="toggled" id="${k}_${verb}">
 					<form action="#" id="${k}_${verb}_form">

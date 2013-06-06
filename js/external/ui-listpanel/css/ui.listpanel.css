@@ -166,12 +166,12 @@
     left: 0px !important;
 }
 
-.list-panel-anchor ul{
+.list-panel-anchor ul {
     background-color:#989898;
 
 }
 
-.list-panel-anchor ul li{
+.list-panel-anchor ul li {
     height:27px;
     border-bottom: 1px solid #666666;
     list-style-type: none;
@@ -183,8 +183,24 @@
 }
 
 .list-panel-anchor ul li:hover, .list-panel-anchor ul li.selected {
-    background-color: #05addc;
+    background-color: #181818;
 }
+
+/* joshS list-panel Re-styling code */
+.list-panel-anchor ul li:hover a {
+    color: #05ADDC;
+}
+
+.list_panel .selected_ListItem {
+    background-color: #181818;
+    border-right: 3px solid #05ADDC;
+    color: #05ADDC;
+}
+
+.list_panel .selected_ListItem a {
+    color: #05ADDC;
+}
+/************************************/
 
 .list-panel-anchor ul li a {
     line-height:26px;
@@ -198,7 +214,6 @@
     white-space: nowrap;
     /*border-right: 1px solid #7a7a7a;*/
 }
-
 
 .list-panel-anchor ul li .row_arrow a{
     display: block;
