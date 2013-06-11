@@ -1,14 +1,9 @@
 <div>
 	<div class="row">
-		<h1 class="api-urls">
-			${title}
-			<small>
-				Click to get info ...
-			</small>
-		</h1>
-		<div class="buttons-right">
-			<!--<button class="btn black toggle-all">Show All</button>-->
-			<a class="toggle-all unchange">Toggle All Methods</a>
+		<h1>${title}</h1>
+		<small class="api-urls credentials-btn">API Credentials</small>
+		<div class="methods-toggle">
+			<a class="toggle-all unchange">Toggle All Methods (OFF)</a>
 		</div>
 	</div>
 
@@ -22,6 +17,7 @@
 						{{else}}
 							${verb.toUpperCase()}
 						{{/if}}
+						<div class="arrow"></div>
 					</button>
 					<small>
 						{{if verb == "get_all"}}

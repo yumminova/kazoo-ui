@@ -364,9 +364,11 @@
 
             if(btn.hasClass('toggleWhite')) {
                 btn.removeClass('toggleWhite');
+                btn.html('Toggle All Methods (OFF)');
             }
             else {
                 btn.addClass('toggleWhite');
+                btn.html('Toggle All Methods (ON)');
             }
         });
 
