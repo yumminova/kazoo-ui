@@ -183,9 +183,19 @@ winkstart.module('developer', 'api', {
                             schema: required
                         });
 
+                        $('.toggle-all', form_html).click(function(ev){
+                            if (!($(this).hasClass('activate'))) {
+                                $('.whapp-header', form_html).addClass('active');
+                            }
+                            else {
+                                $('.whapp-header', form_html).removeClass('active');
+                            }
+                        });
+
                         $('.toggle', form_html).click(function() {
-                            var $header = $(this).parent('.whapp-header');
-                            (!$header.hasClass('active')) ? $header.addClass('active') : $header.removeClass('active');
+                            $(this).parent('.whapp-header').toggleClass('active');
+                            /*var $header = $(this).parent('.whapp-header');
+                            (!$header.hasClass('active')) ? $header.addClass('active') : $header.removeClass('active');*/
                         });
 
                         $('.try', form_html).click(function(e) {

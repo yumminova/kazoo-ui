@@ -10,7 +10,7 @@
 	{{each(k, api) apis}}
 		{{each(i, verb) api.verbs}}
 			<div class="row">
-				<div class="whapp-header">
+				<div class="whapp-header ${rests[verb].btn}">
 					<button class="APIrequest_btn ${rests[verb].btn} toggle" data-toggle="${k}_${verb}">
 						{{if verb == "get_all"}}
 							GET (ALL)
@@ -37,51 +37,99 @@
 						{{/if}}
 						${api.title}
 					</small>
-					<small>${ressources['developer.' + k + '.' + verb].url.substr(9)}</small>
-				</div>
-				<div class="toggled" id="${k}_${verb}">
-					<form action="#" id="${k}_${verb}_form">
-						<div class="pill-content">
-							<h3>${api.title}</h3>
-							<p>
-								${description}
-							</p>
-
-							{{if api.rest}}
-								{{if api.rest[verb]}}
-									{{each(index, class_type)  api.rest[verb]}}
-										<div class="${class_type}"></div>
-										{{if class_type == "schema"}}
-											<a class="details" data-id="${k}_${verb}">Show Advanced</a>	
-										{{/if}}
-									{{/each}}
-								{{/if}}
-							{{/if}}
-							
-							{{if rests[verb].class}}
-								{{each(index, class_type) rests[verb].class}}
-									<div class="${class_type}"></div>
-									{{if class_type == "schema"}}
-										<a class="details" data-id="${k}_${verb}">Show Advanced</a>	
-									{{/if}}
-								{{/each}}
-							{{/if}}
-							
-							<div class="result">
-								<div class="clean icon gradient x_circle" data-id="${k}_${verb}"></div>
-								<div class="result_content">
+					<small class="url_right">${ressources['developer.' + k + '.' + verb].url.substr(9)}</small>
+					<!-- moved .toggled into .whapp-header... was outside .whapp-header but inside .row -->	
+					<div class="toggled" id="${k}_${verb}">
+						<form action="#" id="${k}_${verb}_form">
+							<div class="request-contentWrap">
+								<table class="api-infoTable"> <!-- was .pill-content -->
+									<thead>
+										<tr>
+											<th>Parameter</th>
+											<th>Value</th>
+											<th>Type</th>
+											<th>Description</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>test 1</td>
+											<td>test 2</td>
+											<td>test 3</td>
+											<td>test 4</td>
+										</tr>
+										<tr>
+											<td>agent_wrapup_time</td>
+											<td><input type="text"/></td>
+											<td>enumerated</td>
+											<td>This is a lengthly description to test the width and text flow of the description td cells to see how the text responds to filling up the cell area.</td>
+										</tr>
+										<tr>
+											<td>test 1c</td>
+											<td>test 2c</td>
+											<td>test 3c</td>
+											<td>test 4c</td>
+										</tr>
+										<tr>
+											<td>test 1d</td>
+											<td>test 2d</td>
+											<td>test 3d</td>
+											<td>test 4d</td>
+										</tr>
+										<tr>
+											<td>test 1e</td>
+											<td>test 2e</td>
+											<td>test 3e</td>
+											<td>test 4e</td>
+										</tr>
+										<tr>
+											<td>test 1f</td>
+											<td>test 2f</td>
+											<td>test 3f</td>
+											<td>test 4f</td>
+										</tr>
+									</tbody>
+								</table> <!-- was end .pill-content, now end .api-infoTable -->
 									
-								</div>
-							</div>
-						</div>
-					</form>
+									<!-- ******** NOT SURE WHERE TO PUT THESE YET ******
+									{{if api.rest}}
+										{{if api.rest[verb]}}
+											{{each(index, class_type)  api.rest[verb]}}
+												<div class="${class_type}"></div>
+												{{if class_type == "schema"}}
+													<a class="details" data-id="${k}_${verb}">Show Advanced</a>	
+												{{/if}}
+											{{/each}}
+										{{/if}}
+									{{/if}}
+									
+									{{if rests[verb].class}}
+										{{each(index, class_type) rests[verb].class}}
+											<div class="${class_type}"></div>
+											{{if class_type == "schema"}}
+												<a class="details" data-id="${k}_${verb}">Show Advanced</a>	
+											{{/if}}
+										{{/each}}
+									{{/if}} -->
+								
 
-					<div class="buttons-right">
-						<button class="btn success try" data-id="${k}" data-verb="${verb}">Try It</button>
-					</div>
-					
-				</div>
-			</div>
+								<div class="buttons-left">
+									<button class="TestAPI-btn try" data-id="${k}" data-verb="${verb}">Test API Call</button>
+									<div class="clean" data-id="${k}_${verb}">Clear Results</div>
+								</div> 
+
+								<div class="result">
+									<div class="result_content"></div>
+								</div>
+							</div> <!-- end request-contentWrap -->	
+						</form>
+
+						
+					</div> <!-- end .toggled -->
+
+				</div> <!-- end .whapp-header -->
+				
+			</div> <!-- end .row -->
 		{{/each}}
 	{{/each}}
 	
