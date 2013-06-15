@@ -98,6 +98,8 @@
 	cursor: pointer;
 	color: #fa181b;
 	display: inline-block;
+	font-size: 13px;
+	font-weight: lighter;
 	margin-left: 15px;
 }
 

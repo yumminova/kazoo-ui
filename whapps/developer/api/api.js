@@ -201,6 +201,8 @@ winkstart.module('developer', 'api', {
                         $('.try', form_html).click(function(e) {
                             e.preventDefault();
 
+                            $('.clean').delay(400).fadeIn();
+
                             var id = $(this).data('id'),
                                 verb = $(this).data('verb'),
                                 id_verb = id + "_" + verb,
@@ -225,7 +227,7 @@ winkstart.module('developer', 'api', {
                                         .append($curl);
 
                                     $('#' + id_verb + ' .result', form_html)
-                                        .show('fade');
+                                        .show('blind');
                                 };
 
                             winkstart.publish('api.request', id, verb, form_data,
@@ -263,9 +265,11 @@ winkstart.module('developer', 'api', {
                         $('.clean', form_html).click(function(e){
                             e.preventDefault();
                             $('#' +  $(this).data('id') + ' .result', form_html)
-                                .hide()
+                                .hide('blind')
                                 .find('.result_content')
                                 .empty();
+
+                            $(this).hide();
                         });
 
                         $('.api-urls', form_html).click(function(){
