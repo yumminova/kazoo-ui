@@ -201,8 +201,12 @@ winkstart.module('developer', 'api', {
                         $('.try', form_html).click(function(e) {
                             e.preventDefault();
 
-                            $('.clean').delay(400).fadeIn();
-
+                            $(this)
+                                .parents('.whapp-header')
+                                .find('.clean')
+                                .delay(400)
+                                .fadeIn();
+                            
                             var id = $(this).data('id'),
                                 verb = $(this).data('verb'),
                                 id_verb = id + "_" + verb,
@@ -279,6 +283,13 @@ winkstart.module('developer', 'api', {
                                 modal: true,
                                 title: 'API Information'
                             });
+                        });
+
+                        //for code format select navigation
+                        $('.sampleCode-select li a', form_html).click(function(){
+                            $('.sampleCode-select li a', form_html).removeClass('selected-format');
+
+                            $(this).addClass('selected-format');
                         });
 
                         winkstart.accordion(form_html, false);
