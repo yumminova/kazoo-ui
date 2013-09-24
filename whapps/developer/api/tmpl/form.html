@@ -143,7 +143,7 @@
 											<a class="more-info">?
                                                 <span>
                                                     <p>
-                                                        The response code that you receive after making an API call. Here are some of the codes our APIs respond with: <br>
+                                                        The Response Code that you receive after making an API call. Here are some of the codes our APIs respond with: <br>
                                                         <ul>
                                                         	<li><strong>200</strong> – Success</li>
                                                         	<li><strong>201</strong> – Successful Creation</li>
@@ -168,7 +168,12 @@
 											<a class="more-info">?
                                                 <span>
                                                     <p>
-                                                        The information, in the form of a text record, that a Web server sends back to a client's browser in response to receiving an HTTP request. The response header contains the date, size and type of file that the server is sending back to the client and also data about the server itself. The header is attached to the files being sent back to the client.
+                                                        Every response from the server includes headers that you can use for advanced features. These include: <br>
+                                                         <ul>
+                                                        	<li><strong>X-Request-ID</strong>: A unique ID for your request that can be used for debugging purposes on the API server</li>
+                                                        	<li><strong>Location</strong>: When a resource is created, this is the URL that directs to the newly created resource</li>
+                                                        	<li><strong>Access-Control-*</strong>: These headers allow you to bypass the same origin policy via CORS</li>
+                                                        </ul>
                                                     </p>
                                                 </span>
                                             </a>
@@ -184,7 +189,7 @@
 											<a class="more-info">?
                                                 <span>
                                                     <p>
-                                                        Each inbound trunk allows you to receive one call on your system. More inbound trunks will enable more simultaneous inbound calls.
+                                                        This is the response from the API server—usually this is JSON. However, if you request a resource such as a Voicemail, check the content-type header to determine the binary payload
                                                     </p>
                                                 </span>
                                             </a>
@@ -210,7 +215,7 @@
 											<li><a href="javascript:void(0);" id="select_curl" class="selected-format">Curl</a></li>
 											<li><a href="javascript:void(0);" id="select_php">PHP</a></li>
 											<li><a href="javascript:void(0);" id="select_java">Java</a></li>
-											<li><a href="javascript:void(0);" id="select_perl">Perl</a></li>
+											<li><a href="javascript:void(0);" id="select_perl">JS</a></li>
 											<li><a href="javascript:void(0);" id="select_python">Python</a></li>
 										</ul>
 
