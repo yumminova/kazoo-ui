@@ -759,8 +759,10 @@ winkstart.module('numbers', 'numbers_manager', {
 			};
             var THIS = this,
                 numbers_data = [],
-                popup_html = THIS.templates.add_number_dialog.tmpl(data),
+                popup_html = THIS.templates.add_number_dialog.tmpl({ version: winkstart.apps.cluster.api_url.match(/(v2)$/) ? true : false}),
                 popup;
+
+            console.log(winkstart.apps.cluster.api_url);
 
             $('.toggle_div', popup_html).hide();
 
@@ -776,7 +778,6 @@ winkstart.module('numbers', 'numbers_manager', {
                 npa_data.prefix = npa + nxx;
 
                 THIS.search_numbers(npa_data, function(results_data) {
-
 					results_data._t = function(param){
 						return window.translate['numbers_manager'][param];
 					};
@@ -803,7 +804,7 @@ winkstart.module('numbers', 'numbers_manager', {
 
                 winkstart.confirm(_t('numbers_manager', 'your_onfile_credit_card_will_immediately_be_charged'),
                     function() {
-            
+
 						$('#foundDIDList .checkbox_number:checked', popup_html).each(function() {
 							numbers_data.push($(this).dataset());
 						});

@@ -126,19 +126,19 @@
                                     service: itemName.toUpperCase().replace("_"," "),
                                     rate: item.rate || 0,
                                     quantity: item.quantity || 0,
-                                    discount: discount > 0 ? '-' + self.i18n.active().currencyUsed + parseFloat(discount).toFixed(2) : '',
+                                    discount: discount > 0 ? '- $' + parseFloat(discount).toFixed(2) : '',
                                     monthlyCharges: monthlyCharges
                                 });
 
                                 totalAmount += parseFloat(monthlyCharges);
                             }
                         });
-                    };
+                    }
                 });
 
                 var sortByPrice = function(a, b) {
                     return parseFloat(a.monthlyCharges) >= parseFloat(b.monthlyCharges) ? -1 : 1;
-                }
+                };
 
                 renderData.sort(sortByPrice);
 
@@ -149,8 +149,8 @@
 
         content = 'Here is the detail of the monthly charges attached to your account for this service:';
 
-        if ( activation_charges != null && activation_charges_description != null ) {
-            if ( activation_charges == 0 ) {
+        if ( activation_charges !== null && activation_charges_description !== null ) {
+            if ( activation_charges === 0 ) {
                 content = 'There is no ' + activation_charges_description + '. ';
             } else {
                 content = 'You will pay a $' + activation_charges + ' one-time ' + activation_charges_description + '. ';
