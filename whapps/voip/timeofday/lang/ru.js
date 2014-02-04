@@ -1,4 +1,4 @@
-window.translate['timeofday'] = {
+window.translate['timeofday'] = $.extend(true, {}, window.translate['timeofday'], {
 	time_of_day: "Время дня",
 	disable_time_of_day: "Выключить время дня",
 	enable_time_of_day: "Включить время дня",
@@ -45,4 +45,4 @@ window.translate['timeofday'] = {
 	no_name: "(без имени)",
 	add_time_of_day_label: "Добавить время дня",
 	all_other_times: "Всё остальное время"
-};
+});

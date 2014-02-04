@@ -1,4 +1,4 @@
-window.translate['vmbox'] = {
+window.translate['vmbox'] = $.extend(true, {}, window.translate['vmbox'], {
 	voicemail: "Голосовая почта",
 	voicemail_title: "Голосовая почта",
 	voicemail_tip: "Отправить звонок в систему голосовой почты",
@@ -52,4 +52,4 @@ window.translate['vmbox'] = {
 	add_voicemail_box_label: "Добавить ящик голосовой почты",
 	edit_voicemail_box_title: "Редактировать настройки ящика голосовой почты",
 	create_voicemail_box_title: "Создать ящик голосовой почты"
-};
+});

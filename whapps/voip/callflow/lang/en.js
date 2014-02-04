@@ -3,8 +3,8 @@ window.translate['callflow'] = {
 	delete_callflow: "Delete callflow",
 	save_changes: "Save changes",
 	invalid_number: "Invalid number!",
-	basic: "'Basic'",
-	advanced: "'Advanced'",
+	basic: "Basic",
+	advanced: "Advanced",
 	please_select_valid_number: "Please select a valid number by click in the grey boxes of the Callflow box.",
 	this_callflow_has_not_been_created: "This callflow has not been created or doesn\'t exist anymore.",
 	are_you_sure: "Are you sure you want to delete this callflow?",
@@ -129,5 +129,5 @@ window.translate['callflow'] = {
 	please_enter_a_valide_sip_code: "Please enter a valide SIP code.",
 	resource_name: "Resource",
 	this_callflow_is_outdated: "This callflow is outdated, please resave this callflow before continuing.",
-	hot_desking_name: "Hot Desking"	
+	hot_desking_name: "Hot Desking"
 };

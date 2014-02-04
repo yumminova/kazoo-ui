@@ -1,6 +1,6 @@
-window.translate['config'] = {
-	voip_label: "Виртуальная АТС",
-	voip_desc: "Управление вызовами, голосовая почта и прочие функции телефонии",
+window.translate['config'] = $.extend(true, {}, window.translate['config'], {
+	/*voip_label: "Виртуальная АТС",
+	voip_desc: "Управление вызовами, голосовая почта и прочие функции телефонии",*/
 	cluster_label: "Управление кластером",
 	cluster_desc: "Управление серверами и инфраструктурой",
 	userportal_label: "Мой портал",
@@ -19,7 +19,7 @@ window.translate['config'] = {
 	CLOSE: "Закрыть",		//button Close alert dialog
 	please_confirm_title: "Пожалуйста, подтвердите",	//confirm title dialog
 	WARNING: "ПРЕДУПРЕЖДЕНИЕ",
-	
+
 	/*-------------category actions--------*/
 	basic_cat: "Базовые",
 	advanced_cat: "Расширенные",
@@ -30,4 +30,4 @@ window.translate['config'] = {
 	hotdesking_cat: "Присвоение телефонов",
 	time_of_day_cat: "Время дня"
 	/*-------------------------------------*/
-};
+});

@@ -1,4 +1,4 @@
-window.translate['user'] = {
+window.translate['user'] = $.extend(true, {}, window.translate['user'], {
 	user: "Пользователь",
 	user_tip: "Перевести звонящего на указанного пользователя",
 	hot_desk_login: "Вход с присвоением телефона",
@@ -7,7 +7,7 @@ window.translate['user'] = {
 	hot_desk_logout_tip: "Выключить присвоение телефона",
 	hot_desk_toggle: "Переключить присвоение телефона",
 	hot_desk_toggle_tip: "Переключить состояние присвоения телефона",
-	hotdesking_category: "Присвоение телефона",	
+	hotdesking_category: "Присвоение телефона",
 	connect_caller_to_user: "Подключить звонящего к пользователю...",
 	which_user: "Какой пользователь?",
 	edit_user_options: "Редактировать настройки пользователя",
@@ -133,4 +133,4 @@ window.translate['user'] = {
 	are_you_sure_you_want_to_delete: "Вы уверены что хотите удалить этого пользователя?",
 	do_you_really_want_to_delete: "Вы уверены что хотите удалить это устройство?",
 	add_user_label: "Добавить пользователя"
-};
+});

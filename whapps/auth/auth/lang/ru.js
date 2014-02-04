@@ -1,4 +1,4 @@
-window.translate['auth'] = {
+window.translate['auth'] = $.extend(true, {}, window.translate['auth'], {
 	css_auth: "css/auth_ru.css",
 	login: "Логин / Почта",
 	password: "Пароль",
@@ -55,4 +55,4 @@ window.translate['auth'] = {
 	registered_successfully: "Клиент успешно зарегистрирован. Пожалуйста, проверьте ваш e-mail, на него было отправлено письмо с инструкцией по активации!",
 	please_confirm_your_password: "Пожалуйста, подтвердите ваш пароль",
 	there_were_errors_on_the_form: "При заполнении формы были допущены ошибки. Пожалуйста, исправьте!"
-};
+});

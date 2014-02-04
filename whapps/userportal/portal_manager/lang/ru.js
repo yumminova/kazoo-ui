@@ -1,4 +1,4 @@
-window.translate['portal_manager'] = {
+window.translate['portal_manager'] = $.extend(true, {}, window.translate['portal_manager'], {
 	my_voicemails: "Голосовая почта",
 	my_call_history: "История звонков",
 	my_settings: "Настройки",
@@ -38,5 +38,5 @@ window.translate['portal_manager'] = {
 	message_index: "Список сообщений",
 	voicemail_box_id: "ID ящика голосовой почты",
 	are_you_sure_that_you_want_to_delete: "Вы уверены что хотите удалить выбранные голосовые сообщения?"
-	
-};
+
+});

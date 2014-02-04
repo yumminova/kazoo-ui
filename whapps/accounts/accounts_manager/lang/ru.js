@@ -1,4 +1,4 @@
-window.translate['accounts'] = {
+window.translate['accounts'] = $.extend(true, {}, window.translate['accounts'], {
 	add_account: "Добавить клиента",
 	create_account: "Создать клиента",
 	edit_account: "Редактировать клиента",
@@ -92,4 +92,4 @@ window.translate['accounts'] = {
 	customers_available_balance: "Доступный клиенту баланс для вызовов с поминутной тарификацией:",
 	delete_white_labeling: "Удалить ребрендинг",
 	advanced: "Расширенные"
-};
+});

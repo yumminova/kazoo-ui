@@ -1,10 +1,10 @@
-window.translate['callflow'] = {
+window.translate['callflow'] = $.extend(true, {}, window.translate['callflow'], {
 	css_callflow: "css/callflow.css",
 	delete_callflow: "Удалить сценарий",
 	save_changes: "Сохранить изменения",
 	invalid_number: "Неверный номер!",
-	basic: "'Базовые'",
-	advanced: "'Расширенные'",
+	basic: "Базовые",
+	advanced: "Расширенные",
 	please_select_valid_number: "Выберите корректный номер, нажав внутри области Сценария.",
 	this_callflow_has_not_been_created: "Этот сценарий не был создан или более не существует.",
 	are_you_sure: "Вы уверенеы что хотите удалить этот сценарий?",
@@ -129,5 +129,5 @@ window.translate['callflow'] = {
 	please_enter_a_valide_sip_code: "Пожалуйста, введите корректный код ответа SIP.",
 	resource_name: "Ресурс",
 	this_callflow_is_outdated: "Этот сценарий устарел. Пожалуйста, пересохраните этот сценарий перед продолжением.",
-	hot_desking_name: "Присвоение телефона"	
-};
+	hot_desking_name: "Присвоение телефона"
+});

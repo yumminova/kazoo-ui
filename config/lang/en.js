@@ -19,7 +19,7 @@ window.translate['config'] = {
 	CLOSE: "Close",		//button Close alert dialog
 	please_confirm_title: "Please confirm",	//confirm title dialog
 	WARNING: "warning",
-			
+
 	/*-------------category actions--------*/
 	basic_cat: "Basic",
 	advanced_cat: "Advanced",

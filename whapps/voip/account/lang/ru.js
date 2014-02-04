@@ -1,4 +1,4 @@
-window.translate['account'] = {
+window.translate['account'] = $.extend(true, {}, window.translate['account'], {
 	account_details: "Информация об учётной записи",
 	basic: "Базовые",
 	advanced: "Расширенные",
@@ -39,4 +39,4 @@ window.translate['account'] = {
 	account_details_label: "Информация об учётной записи",
 	there_were_errors_on_the_form: "При заполнении формы были допущены ошибки, пожалуйста исправьте!",
 	are_you_sure_you_want_to_delete: "Вы уверены что хотите удалить эту учётную запись?<br>ВНИМАНИЕ: Отмена этого действия невозможна!"
-};
+});

@@ -1,4 +1,4 @@
-window.translate['onboarding'] = {
+window.translate['onboarding'] = $.extend(true, {}, window.translate['onboarding'], {
 	css_onboarding: "css/onboarding.css",
 	get_started: "НАЧАТЬ",
 	step: "Шаг",
@@ -54,5 +54,5 @@ window.translate['onboarding'] = {
 	extension: "Внутренний номер #",
 	passwords_are_not_matching: "Пароли не совпадают, пожалуйста, введите заново.",
 	email_addresses_are_not_matching: "Адреса e-mail не совпадают, пожалуйста, введите заново."
-	
-};
+
+});

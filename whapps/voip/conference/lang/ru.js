@@ -1,4 +1,4 @@
-window.translate['conference'] = {
+window.translate['conference'] = $.extend(true, {}, window.translate['conference'], {
 	conference: "Конференция",
 	conference_tip: "Подключает звонящего к существующей конференции",
 	conference_service: "Сервер конференций",
@@ -37,4 +37,4 @@ window.translate['conference'] = {
 	name: "(имя)",
 	conferences_label: "Конференции",
 	add_conference_label: "Добавить конференцию"
-};
+});
