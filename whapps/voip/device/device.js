@@ -10,10 +10,10 @@ winkstart.module('voip', 'device', {
             landline: 'tmpl/landline.html',
             cellphone: 'tmpl/cellphone.html',
             softphone: 'tmpl/softphone.html',
+            mobile: 'tmpl/mobile.html',
             sip_device: 'tmpl/edit.html',
             fax: 'tmpl/fax.html',
             device_callflow: 'tmpl/device_callflow.html',
-            device_threshold: 'tmpl/device_threshold.html',
             sip_uri: 'tmpl/sip_uri.html'
         },
 
@@ -26,46 +26,58 @@ winkstart.module('voip', 'device', {
 
         validation: {
             sip_uri: [
-                { name: '#name',                regex: /^[a-zA-Z0-9\s_']+$/ }
+                { name: '#name',                regex: _t('device', 'sip_uri_name_regex') }
             ],
             sip_device : [
-                { name: '#name',                      regex: /^[a-zA-Z0-9\s_'\-]+$/ },
+                { name: '#name',                      regex: _t('device', 'name_regex') },
                 { name: '#mac_address',               regex: /^(((\d|([a-f]|[A-F])){2}:){5}(\d|([a-f]|[A-F])){2})$|^$|^(((\d|([a-f]|[A-F])){2}-){5}(\d|([a-f]|[A-F])){2})$|^(((\d|([a-f]|[A-F])){2}){5}(\d|([a-f]|[A-F])){2})$/ },
-                { name: '#caller_id_name_internal',   regex: /^[0-9A-Za-z ,]{0,15}$/ },
+                { name: '#caller_id_name_internal',   regex: _t('device', 'caller_id_name_regex') },
                 { name: '#caller_id_number_internal', regex: /^[\+]?[0-9\s\-\.\(\)]*$/ },
-                { name: '#caller_id_name_external',   regex: /^[0-9A-Za-z ,]{0,15}$/ },
+                { name: '#caller_id_name_external',   regex: _t('device', 'caller_id_name_regex') },
                 { name: '#caller_id_number_external', regex: /^[\+]?[0-9\s\-\.\(\)]*$/ },
                 { name: '#caller_id_number_emergency',regex: /^[\+]?[0-9\s\-\.\(\)]*$/ },
-                { name: '#caller_id_name_emergency',  regex: /^[0-9A-Za-z ,]{0,15}$/ },
+                { name: '#caller_id_name_emergency',  regex: _t('device', 'caller_id_name_regex') },
                 { name: '#sip_username',              regex: /^[^\s]+$/ },
                 { name: '#sip_expire_seconds',        regex: /^[0-9]+$/ }
             ],
             fax : [
-                { name: '#name',                      regex: /^[a-zA-Z0-9\s_'\-]+$/ },
+                { name: '#name',                      regex: _t('device', 'name_regex') },
                 { name: '#mac_address',               regex: /^(((\d|([a-f]|[A-F])){2}:){5}(\d|([a-f]|[A-F])){2})$|^$|^(((\d|([a-f]|[A-F])){2}-){5}(\d|([a-f]|[A-F])){2})$|^(((\d|([a-f]|[A-F])){2}){5}(\d|([a-f]|[A-F])){2})$/ },
-                { name: '#caller_id_name_internal',   regex: /^[0-9A-Za-z ,]{0,15}$/ },
+                { name: '#caller_id_name_internal',   regex: _t('device', 'caller_id_name_regex') },
                 { name: '#caller_id_number_internal', regex: /^[\+]?[0-9\s\-\.\(\)]*$/ },
-                { name: '#caller_id_name_external',   regex: /^[0-9A-Za-z ,]{0,15}$/ },
+                { name: '#caller_id_name_external',   regex: _t('device', 'caller_id_name_regex') },
                 { name: '#caller_id_number_external', regex: /^[\+]?[0-9\s\-\.\(\)]*$/ },
                 { name: '#caller_id_number_emergency',regex: /^[\+]?[0-9\s\-\.\(\)]*$/ },
-                { name: '#caller_id_name_emergency',  regex: /^[0-9A-Za-z ,]{0,15}$/ },
+                { name: '#caller_id_name_emergency',  regex: _t('device', 'caller_id_name_regex') },
                 { name: '#sip_username',              regex: /^[^\s]+$/ },
                 { name: '#sip_expire_seconds',        regex: /^[0-9]+$/ }
             ],
             cellphone: [
-                { name: '#name',                regex: /^[a-zA-Z0-9\s_'\-]+$/ },
+                { name: '#name',                regex: _t('device', 'name_regex') },
                 { name: '#call_forward_number', regex: /^[\+]?[0-9\s\-\.\(\)]*$/ }
             ],
             smartphone: [
-                { name: '#name',                regex: /^[a-zA-Z0-9\s_'\-]+$/ },
+                { name: '#name',                regex: _t('device', 'name_regex') },
                 { name: '#call_forward_number', regex: /^[\+]?[0-9\s\-\.\(\)]*$/ }
             ],
             landline: [
-                { name: '#name',                regex: /^[a-zA-Z0-9\s_'\-]+$/ },
+                { name: '#name',                regex: _t('device', 'name_regex') },
                 { name: '#call_forward_number', regex: /^[\+]?[0-9\s\-\.\(\)]*$/ }
             ],
             softphone: [
+                { name: '#name',                      regex: _t('device', 'name_regex') },
+                { name: '#caller_id_name_internal',   regex: _t('device', 'caller_id_name_regex') },
+                { name: '#caller_id_number_internal', regex: /^[\+]?[0-9\s\-\.\(\)]*$/ },
+                { name: '#caller_id_name_external',   regex: _t('device', 'caller_id_name_regex') },
+                { name: '#caller_id_number_external', regex: /^[\+]?[0-9\s\-\.\(\)]*$/ },
+                { name: '#caller_id_number_emergency',regex: /^[\+]?[0-9\s\-\.\(\)]*$/ },
+                { name: '#caller_id_name_emergency',  regex: _t('device', 'caller_id_name_regex') },
+                { name: '#sip_username',              regex: /^[^\s]+$/ },
+                { name: '#sip_expire_seconds',        regex: /^[0-9]+$/ }
+            ],
+            mobile: [
                 { name: '#name',                      regex: /^[a-zA-Z0-9\s_'\-]+$/ },
+                { name: '#mdn',                       regex: /^[0-9]{10}$/ },
                 { name: '#caller_id_name_internal',   regex: /^[0-9A-Za-z ,]{0,15}$/ },
                 { name: '#caller_id_number_internal', regex: /^[\+]?[0-9\s\-\.\(\)]*$/ },
                 { name: '#caller_id_name_external',   regex: /^[0-9A-Za-z ,]{0,15}$/ },
@@ -147,10 +159,10 @@ winkstart.module('voip', 'device', {
         winkstart.publish('whappnav.subnav.add', {
             whapp: 'voip',
             module: THIS.__module,
-            label: 'Devices',
+            label: _t('device', 'devices_label'),
             icon: 'device',
             weight: '20',
-            category: 'advanced'
+            category: _t('config', 'advanced_menu_cat')
         });
     },
 
@@ -194,66 +206,25 @@ winkstart.module('voip', 'device', {
                         api_url: winkstart.apps['voip'].api_url
                     },
                     function(_data, status) {
-                        var create_device = function() {
-                            winkstart.request(true, 'device.create', {
-                                    account_id: winkstart.apps['voip'].account_id,
-                                    api_url: winkstart.apps['voip'].api_url,
-                                    data: normalized_data
-                                },
-                                function(_data, status) {
-                                    if(typeof success == 'function') {
-                                        success(_data, status, 'create');
-                                    }
-                                },
-                                function(_data, status) {
-                                    if(typeof error == 'function') {
-                                        error(_data, status, 'create');
-                                    }
+                        winkstart.request(true, 'device.create', {
+                                account_id: winkstart.apps['voip'].account_id,
+                                api_url: winkstart.apps['voip'].api_url,
+                                data: normalized_data
+                            },
+                            function(_data, status) {
+                                if(typeof success == 'function') {
+                                    success(_data, status, 'create');
                                 }
-                            );
-                        };
-
-                        if($.inArray(_data.data.length, winkstart.config.device_threshold || []) > -1) {
-                            if(('reseller_id' in winkstart.config && winkstart.apps['auth'].reseller_id !== winkstart.config.reseller_id) || (winkstart.apps['auth'].account_id === winkstart.apps['auth'].reseller_id)) {
-                                create_device();
+                            },
+                            function(_data, status) {
+                                if(typeof error == 'function') {
+                                    error(_data, status, 'create');
+                                }
                             }
-                            else {
-                                THIS.render_alert_threshold({ nb_devices: _data.data.length}, create_device);
-                            }
-                        }
-                        else {
-                            create_device();
-                        }
+                        );
                     }
                 );
-
             }
-        },
-
-        render_alert_threshold: function(data, success, error) {
-            var THIS = this,
-                threshold_html = THIS.templates.device_threshold.tmpl(data);
-
-            $('.save-device', threshold_html).click(function() {
-                dialog.dialog('destroy');
-
-                if(typeof success === 'function') {
-                    success();
-                }
-            });
-
-            $('.cancel-device', threshold_html).click(function() {
-                if(typeof error === 'function') {
-                    error();
-                }
-                else {
-                    dialog.dialog('destroy');
-                }
-            });
-
-            var dialog = winkstart.dialog(threshold_html, {
-                title: 'Maximum number of devices for your current service plan reached'
-            });
         },
 
         edit_device: function(data, _parent, _target, _callbacks, data_defaults) {
@@ -270,7 +241,7 @@ winkstart.module('voip', 'device', {
 
                     save_error: _callbacks.save_error || function(_data, status, type) {
                         if(status == 200 && type == 'mac_address') {
-                            winkstart.alert('warning', 'This MAC Address is already in use, please verify that it is correct.');
+                            winkstart.alert('warning', _t('device', 'this_mac_address_is_already_in_use'));
                         }
                     },
 
@@ -326,7 +297,7 @@ winkstart.module('voip', 'device', {
                         call_restriction: {},
                         sip: {
                             methods: {
-                                'password': 'Password',
+                                'password': _t('device', 'password'),
                                 'ip': 'IP'
                             },
                             invite_formats: {
@@ -337,15 +308,15 @@ winkstart.module('voip', 'device', {
                         },
                         media: {
                             peer_to_peer_options: {
-                                'auto': 'Automatic',
-                                'true': 'Always',
-                                'false': 'Never'
+                                'auto': _t('device', 'automatic'),
+                                'true': _t('device', 'always'),
+                                'false': _t('device', 'never')
                             },
                             fax: {
                                 options: {
-                                    'auto': 'Auto-detect',
-                                    'true': 'Always Force',
-                                    'false': 'Disabled'
+                                    'auto': _t('device', 'auto_detect'),
+                                    'true': _t('device', 'always_force'),
+                                    'false': _t('device', 'disabled')
                                 }
                             },
                             audio: {
@@ -356,7 +327,10 @@ winkstart.module('voip', 'device', {
                                     'G722_16': 'G722 (HD) @ 16kHz',
                                     'G722_32': 'G722.1 (HD) @ 32kHz',
                                     'CELT_48': 'Siren (HD) @ 48kHz',
-                                    'CELT_64': 'Siren (HD) @ 64kHz'
+                                    'CELT_64': 'Siren (HD) @ 64kHz',
+                                    'GSM': 'GSM',
+                                    'OPUS': 'OPUS',
+                                    'Speex': 'Speex'
                                 }
                             },
                             video: {
@@ -441,11 +415,11 @@ winkstart.module('voip', 'device', {
                             _data.data.unshift(
                                 {
                                     id: '',
-                                    name: 'Default Music'
+                                    name: _t('device', 'default_music')
                                 },
                                 {
                                     id: 'silence_stream://300000',
-                                    name: 'Silence'
+                                    name: _t('device', 'silence')
                                 }
                             );
 
@@ -524,6 +498,9 @@ winkstart.module('voip', 'device', {
         },
 
         render_device: function(data, target, callbacks){
+			data._t = function(param){
+				return window.translate['device'][param];
+			};
             var THIS = this,
                 device_html,
                 render;
@@ -532,7 +509,7 @@ winkstart.module('voip', 'device', {
                 device_html = THIS.templates[data.data.device_type].tmpl(data);
 
                 /* Do device type specific things here */
-                if($.inArray(data.data.device_type, ['fax', 'softphone', 'sip_device', 'smartphone']) > -1) {
+                if($.inArray(data.data.device_type, ['fax', 'softphone', 'sip_device', 'smartphone', 'mobile']) > -1) {
                     device_html.delegate('#sip_password[type="password"]', 'focus', function() {
                         var value = $(this).val();
                         $('<input id="sip_password" name="sip.password" type="text"/>').insertBefore($(this)).val(value).focus();
@@ -602,14 +579,14 @@ winkstart.module('voip', 'device', {
                                 }
                             }
 
-                            if('field_data' in data) {
-                                delete data.field_data;
-                            }
+                            // if('field_data' in data) {
+                            //     delete data.field_data;
+                            // }
 
                             THIS.save_device(form_data, data, callbacks.save_success, winkstart.error_message.process_error(callbacks.save_error));
                         },
                         function() {
-                            winkstart.alert('There were errors on the form, please correct!');
+                            winkstart.alert(_t('device', 'there_were_errors_on_the_form'));
                         }
                     );
                 });
@@ -617,7 +594,7 @@ winkstart.module('voip', 'device', {
                 $('.device-delete', device_html).click(function(ev) {
                     ev.preventDefault();
 
-                    winkstart.confirm('Are you sure you want to delete this device?', function() {
+                    winkstart.confirm(_t('device', 'are_you_sure_you_want_to_delete'), function() {
                         THIS.delete_device(data, callbacks.delete_success, callbacks.delete_error);
                     });
                 });
@@ -677,7 +654,11 @@ winkstart.module('voip', 'device', {
                 });
             }
             else {
-                device_html = THIS.templates.general_edit.tmpl();
+                device_html = THIS.templates.general_edit.tmpl({
+					_t: function(param){
+						return window.translate['device'][param];
+					}
+				});
 
                 $('.media_pane', device_html).hide();
                 $('.media_tabs .buttons', device_html).click(function() {
@@ -741,6 +722,14 @@ winkstart.module('voip', 'device', {
 
             if(data.data.device_type === 'sip_uri') {
                 data.data.sip.invite_format = 'route';
+            }
+
+            if(data.data.device_type === 'mobile') {
+                if(!('mobile' in data.data)) {
+                    data.data.mobile = {
+                        mdn: ''
+                    };
+                }
             }
         },
 
@@ -901,7 +890,7 @@ winkstart.module('voip', 'device', {
                             $.each(data, function(key, val){
                                 new_list.push({
                                     id: val.id,
-                                    title: val.name || '(no name)'
+                                    title: val.name || _t('device', 'no_name')
                                 });
                             });
                         }
@@ -916,9 +905,9 @@ winkstart.module('voip', 'device', {
                     $('#device-listpanel', parent)
                         .empty()
                         .listpanel({
-                            label: 'Devices',
+                            label: _t('device', 'devices_label'),
                             identifier: 'device-listview',
-                            new_entity_label: 'Add Device',
+                            new_entity_label: _t('device', 'add_device_label'),
                             data: map_crossbar_data(data.data),
                             publisher: winkstart.publish,
                             notifyMethod: 'device.edit',
@@ -988,7 +977,7 @@ winkstart.module('voip', 'device', {
                 },
                 after_render: function() {
                     popup = winkstart.dialog(popup_html, {
-                        title: (data.id) ? 'Edit Device' : 'Create Device'
+                        title: (data.id) ? _t('device', 'edit_device') : _t('device', 'create_device')
                     });
                 }
             }, data_defaults);
@@ -1034,11 +1023,11 @@ winkstart.module('voip', 'device', {
 
             $.extend(callflow_nodes, {
                 'device[id=*]': {
-                    name: 'Device',
+                    name: _t('device', 'device'),
                     icon: 'phone',
-                    category: 'Advanced',
+                    category: _t('config', 'advanced_cat'),
                     module: 'device',
-                    tip: 'Ring a VoIP or cell phone or other device',
+                    tip: _t('device', 'device_tip'),
                     data: {
                         id: 'null'
                     },
@@ -1069,6 +1058,9 @@ winkstart.module('voip', 'device', {
                                 var popup, popup_html;
 
                                 popup_html = THIS.templates.device_callflow.tmpl({
+									_t: function(param){
+										return window.translate['device'][param];
+									},
                                     can_call_self: node.getMetadata('can_call_self') || false,
                                     parameter: {
                                         name: 'timeout (s)',
@@ -1112,7 +1104,7 @@ winkstart.module('voip', 'device', {
                                 });
 
                                 popup = winkstart.dialog(popup_html, {
-                                    title: 'Device',
+                                    title: _t('device', 'device_title'),
                                     minHeight: '0',
                                     beforeClose: function() {
                                         if(typeof callback == 'function') {

@@ -3,7 +3,7 @@ winkstart.module('voip', 'callflow', {
             'css/style.css',
             /*'css/popups.css',*/
             'css/two_columns.css',
-            'css/callflow.css',
+            _t('callflow', 'css_callflow'),
             'css/ring_groups.css'
         ],
 
@@ -18,6 +18,7 @@ winkstart.module('voip', 'callflow', {
             add_number: 'tmpl/add_number.html',
             edit_dialog: 'tmpl/edit_dialog.html',
             two_column: 'tmpl/two_column.html',
+            call_record_callflow: 'tmpl/call_record_callflow.html',
             disa_callflow: 'tmpl/disa_callflow.html',
             pivot_callflow: 'tmpl/pivot_callflow.html',
             presence_callflow: 'tmpl/presence_callflow.html',
@@ -30,7 +31,8 @@ winkstart.module('voip', 'callflow', {
             fax_callflow: 'tmpl/fax_callflow.html',
             edit_name: 'tmpl/edit_name.html',
             prepend_cid_callflow: 'tmpl/prepend_cid_callflow.html',
-            response_callflow: 'tmpl/response_callflow.html'
+            response_callflow: 'tmpl/response_callflow.html',
+            group_pickup: 'tmpl/group_pickup.html'
         },
 
         elements: {
@@ -116,6 +118,21 @@ winkstart.module('voip', 'callflow', {
                 url: '{api_url}/accounts/{account_id}/media',
                 contentType: 'application/json',
                 verb: 'GET'
+            },
+            'callflow.list_devices': {
+                url: '{api_url}/accounts/{account_id}/devices',
+                contentType: 'application/json',
+                verb: 'GET'
+            },
+            'callflow.list_users': {
+                url: '{api_url}/accounts/{account_id}/users',
+                contentType: 'application/json',
+                verb: 'GET'
+            },
+            'callflow.list_groups': {
+                url: '{api_url}/accounts/{account_id}/groups',
+                contentType: 'application/json',
+                verb: 'GET'
             }
         }
     },
@@ -129,7 +146,7 @@ winkstart.module('voip', 'callflow', {
         winkstart.publish('whappnav.subnav.add', {
             whapp: 'voip',
             module: THIS.__module,
-            label: 'Callflows',
+            label: _t('callflow', 'callflows_label'),
             icon: 'callflow',
             weight: '50'
         });
@@ -252,7 +269,9 @@ winkstart.module('voip', 'callflow', {
 
             $('#ws-content').empty()
                             .append(callflow_html);
-
+			THIS.config.elements._t = function(param){
+				return window.translate['callflow'][param];
+			}
             THIS.renderList(function() {
                 THIS.templates.callflow.tmpl(THIS.config.elements).appendTo($('#callflow-view'));
             });
@@ -270,16 +289,20 @@ winkstart.module('voip', 'callflow', {
                 function(_data_numbers, status) {
                     THIS.list_numbers_callflow(
                         function(number_callflows, status) {
-                            $.each(number_callflows, function(k, v) {
-                                delete _data_numbers.data[k];
-                            });
+                        	if('numbers' in _data_numbers.data) {
+                            	$.each(number_callflows, function(k, v) {
+                                	delete _data_numbers.data.numbers[k];
+                            	});
+                            }
 
                             if(typeof success === 'function') {
                                 THIS.list_numbers_trunkstore(
                                     function(numbers_trunkstore) {
-                                        $.each(numbers_trunkstore, function(k, v) {
-                                            delete _data_numbers.data[k];
-                                        });
+                                    	if('numbers' in _data_numbers.data) {
+                                        	$.each(numbers_trunkstore, function(k, v) {
+                                            	delete _data_numbers.data.numbers[k];
+                                        	});
+                                        }
 
                                         success(_data_numbers);
                                     },
@@ -298,15 +321,20 @@ winkstart.module('voip', 'callflow', {
                 },
                 function(_data, status) {
                     if(typeof error === 'function') {
-                        error(_data_numbers);
+                        error(_data);
                     }
                 }
             );
         },
 
         renderButtons: function() {
+			data = {
+				_t: function(param){
+					return window.translate['callflow'][param];
+				}
+			};
             var THIS = this,
-                buttons_html = THIS.templates.buttons.tmpl();
+                buttons_html = THIS.templates.buttons.tmpl(data);
 
             $('.buttons').empty();
 
@@ -315,13 +343,13 @@ winkstart.module('voip', 'callflow', {
                     THIS.save();
                 }
                 else {
-                    winkstart.alert('Invalid number! <br/><br/>Please select a valid number by click in the grey boxes of the Callflow box.');
+                    winkstart.alert(_t('callflow', 'invalid_number') + '<br/><br/>' + _t('callflow', 'please_select_valid_number'));
                 }
             });
 
             $('.delete', buttons_html).click(function() {
                 if(THIS.flow.id) {
-                    winkstart.confirm('Are you sure you want to delete this callflow?', function() {
+                    winkstart.confirm(_t('callflow', 'are_you_sure'), function() {
                         winkstart.deleteJSON('callflow.delete', {
                                 account_id: winkstart.apps['voip'].account_id,
                                 api_url: winkstart.apps['voip'].api_url,
@@ -339,7 +367,7 @@ winkstart.module('voip', 'callflow', {
                     });
                 }
                 else {
-                    winkstart.alert('This callflow has not been created or doesn\'t exist anymore.');
+                    winkstart.alert(_t('callflow', 'this_callflow_has_not_been_created'));
                 }
             });
 
@@ -703,9 +731,9 @@ winkstart.module('voip', 'callflow', {
                     $('.edit_icon', node_html).click(function() {
                         THIS.flow = $.extend(true, { contact_list: { exclude: false }} , THIS.flow);
 
-                        var popup = winkstart.dialog(THIS.templates.edit_name.tmpl({name: THIS.flow.name, exclude: THIS.flow.contact_list.exclude}), {
+                        var popup = winkstart.dialog(THIS.templates.edit_name.tmpl({name: THIS.flow.name, exclude: THIS.flow.contact_list.exclude, _t: function(param){return window.translate['callflow'][param];}}), {
                             width: '310px',
-                            title: 'Edit Callflow Name'
+                            title: _t('callflow', 'popup_title')
                         });
 
                         $('#add', popup).click(function() {
@@ -735,7 +763,10 @@ winkstart.module('voip', 'callflow', {
                     for(var x, size = THIS.flow.numbers.length, j = Math.floor((size) / 2) + 1, i = 0; i < j; i++) {
                         x = i * 2;
                         THIS.templates.num_row.tmpl({
-                            numbers: THIS.flow.numbers.slice(x, (x + 2 < size) ? x + 2 : size)
+                            numbers: THIS.flow.numbers.slice(x, (x + 2 < size) ? x + 2 : size),
+							_t: function(param){
+								return window.translate['callflow'][param];
+							}
                         }).appendTo($('.content', node_html));
                     }
 
@@ -743,24 +774,29 @@ winkstart.module('voip', 'callflow', {
                         THIS.list_numbers(function(_data) {
                             var phone_numbers = [];
 
-                            $.each(_data.data, function(k,v) {
-                                if(k != 'id') {
+							if('numbers' in _data.data) {
+                            	$.each(_data.data.numbers, function(k,v) {
                                     phone_numbers.push(k);
-                                }
-                            });
+                            	});
+                            }
                             phone_numbers.sort();
 
-                            var popup_html = THIS.templates.add_number.tmpl({phone_numbers: phone_numbers}),
+                            var popup_html = THIS.templates.add_number.tmpl({
+								phone_numbers: phone_numbers,
+								_t: function(param){
+									return window.translate['callflow'][param];
+								}
+							}),
                                 popup;
 
                             if(phone_numbers.length === 0) {
                                 $('#list_numbers', popup_html).attr('disabled', 'disabled');
-                                $('<option value="select_none">No Phone Numbers</option>').appendTo($('#list_numbers', popup_html));
+                                $('<option value="select_none">' + _t('callflow', 'no_phone_numbers') + '</option>').appendTo($('#list_numbers', popup_html));
                             }
 
                             var render = function() {
                                 popup = winkstart.dialog(popup_html, {
-                                        title: 'Add number'
+                                        title: _t('callflow', 'add_number')
                                 });
                             };
 
@@ -768,11 +804,11 @@ winkstart.module('voip', 'callflow', {
                                  THIS.list_numbers(function(_data) {
                                     phone_numbers = [];
 
-                                    $.each(_data.data, function(k,v) {
-                                        if(k != 'id') {
-                                            phone_numbers.push(k);
-                                        }
-                                    });
+									if('numbers' in _data.data) {
+                            			$.each(_data.data.numbers, function(k,v) {
+                                    		phone_numbers.push(k);
+                            			});
+                            		}
 
                                     phone_numbers.sort();
 
@@ -780,7 +816,7 @@ winkstart.module('voip', 'callflow', {
 
                                     if(phone_numbers.length === 0) {
                                         $('#list_numbers', popup).attr('disabled', 'disabled');
-                                        $('<option value="select_none">No Phone Numbers</option>').appendTo($('#list_numbers', popup));
+                                        $('<option value="select_none">' + _t('callflow', 'no_phone_numbers') + '</option>').appendTo($('#list_numbers', popup));
                                     }
                                     else {
                                         $('#list_numbers', popup).removeAttr('disabled');
@@ -820,7 +856,7 @@ winkstart.module('voip', 'callflow', {
                                             THIS.renderFlow();
                                         }
                                         else {
-                                            winkstart.alert('You didn\'t select a valid phone number.');
+                                            winkstart.alert(_t('callflow', 'you_didnt_select'));
                                         }
                                     },
                                     check_and_add_number = function() {
@@ -828,7 +864,7 @@ winkstart.module('voip', 'callflow', {
                                             function(data_numbers, status) {
                                                 map_numbers = $.extend(true, map_numbers, data_numbers);
                                                 if(number in map_numbers) {
-                                                    winkstart.alert('This number is already attached to a callflow');
+                                                    winkstart.alert(_t('callflow', 'this_number_is_already_attached'));
                                                 }
                                                 else {
                                                     add_number();
@@ -1004,10 +1040,9 @@ winkstart.module('voip', 'callflow', {
                 tools;
 
             /* Don't add categories here, this is just a hack to order the list on the right */
-            THIS.categories = {
-                'Basic': [],
-                'Advanced': []
-            };
+		THIS.categories = {};  
+		THIS.categories["'" + _t('callflow', 'basic') + "'"] = [];
+		THIS.categories["'" + _t('callflow', 'advanced') + "'"] = [];
 
             $.each(THIS.actions, function(i, data) {
                 if('category' in data) {
@@ -1018,7 +1053,10 @@ winkstart.module('voip', 'callflow', {
 
             tools = THIS.templates.tools.tmpl({
                 categories: THIS.categories,
-                nodes: THIS.actions
+                nodes: THIS.actions,
+				_t: function(param){
+					return window.translate['callflow'][param];
+				}
             });
 
             $('.content', tools).hide();
@@ -1228,7 +1266,7 @@ winkstart.module('voip', 'callflow', {
                 }
             }
             else {
-                winkstart.alert('You need to select a number for this callflow before saving it.');
+                winkstart.alert(_t('callflow', 'you_need_to_select_a_number'));
             }
         },
 
@@ -1273,9 +1311,9 @@ winkstart.module('voip', 'callflow', {
                     }
 
                     var options = {};
-                    options.label = 'Callflow Module';
+                    options.label = _t('callflow', 'callflow_module_label');
                     options.identifier = 'callflow-module-listview';
-                    options.new_entity_label = 'Add Callflow';
+                    options.new_entity_label = _t('callflow', 'add_callflow_label');
                     options.data = map_crossbar_data(data.data);
                     options.publisher = winkstart.publish;
                     options.notifyMethod = 'callflow.list-panel-click';
@@ -1329,6 +1367,39 @@ winkstart.module('voip', 'callflow', {
             };
 
             return stats;
+        },
+
+        groups_list: function(callback) {
+			winkstart.request(true, 'callflow.list_groups', {
+					account_id: winkstart.apps['voip'].account_id,
+                    api_url: winkstart.apps['voip'].api_url
+				},
+				function(data, status) {
+					callback && callback(data.data);
+				}
+			);
+        },
+
+        devices_list: function(callback) {
+			winkstart.request(true, 'callflow.list_devices', {
+					account_id: winkstart.apps['voip'].account_id,
+                    api_url: winkstart.apps['voip'].api_url
+				},
+				function(data, status) {
+					callback && callback(data.data);
+				}
+			);
+        },
+
+        users_list: function(callback) {
+			winkstart.request(true, 'callflow.list_users', {
+					account_id: winkstart.apps['voip'].account_id,
+                    api_url: winkstart.apps['voip'].api_url
+				},
+				function(data, status) {
+					callback && callback(data.data);
+				}
+			);
         },
 
         define_callflow_nodes: function(callflow_nodes) {
@@ -1404,6 +1475,9 @@ winkstart.module('voip', 'callflow', {
                                             });
 
                                             popup_html = THIS.templates.page_group_dialog.tmpl({
+												_t: function(param){
+													return window.translate['callflow'][param];
+												},
                                                 form: {
                                                     name: node.getMetadata('name') || ''
                                                 }
@@ -1531,7 +1605,7 @@ winkstart.module('voip', 'callflow', {
                                             });
 
                                             popup = winkstart.dialog(popup_html, {
-                                                title: 'Page Group',
+                                                title: _t('callflow', 'page_group_title'),
                                                 beforeClose: function() {
                                                     if(typeof callback == 'function') {
                                                         callback();
@@ -1556,7 +1630,7 @@ winkstart.module('voip', 'callflow', {
                                                         confirm_text;
 
                                                     if(data.endpoint_type === 'device') {
-                                                        confirm_text = 'The owner of this device is already in the ring group. By adding this device, you will remove the User from this ring group. Would you like to continue anyway?';
+                                                        confirm_text = _t('callflow', 'the_owner_of_this_device_is_already');
                                                         $('.connect.right li', popup_html).each(function() {
                                                             if($(this).dataset('id') === data.owner_id) {
                                                                 list_li.push($(this));
@@ -1564,7 +1638,7 @@ winkstart.module('voip', 'callflow', {
                                                         });
                                                     }
                                                     else if(data.endpoint_type === 'user') {
-                                                        confirm_text = 'This user has already some devices belonging to him in this ring group. By adding him to the ring group, you will remove devices that were already in the ring group. Would you like to continue anyway?';
+                                                        confirm_text = _t('callflow', 'this_user_has_already_some_devices');
                                                         $('.connect.right li', popup_html).each(function() {
                                                             if($(this).dataset('owner_id') === data.id) {
                                                                 list_li.push($(this));
@@ -1646,7 +1720,7 @@ winkstart.module('voip', 'callflow', {
                                 // We need to translate the endpoints to prevent nasty O(N^2) time complexities,
                                 // we also need to clone to prevent managing of objects
                                 $.each($.extend(true, {}, endpoints), function(i, obj) {
-                                    obj.name = 'Undefined Device';
+                                    obj.name = _t('callflow', 'undefined_device');
                                     selected_endpoints[obj.id] = obj;
                                 });
                             }
@@ -1686,8 +1760,7 @@ winkstart.module('voip', 'callflow', {
                                     winkstart.request('user.list', {
                                             account_id: winkstart.apps['voip'].account_id,
                                             api_url: winkstart.apps['voip'].api_url
-                                        },
-                                        function(_data, status) {
+                                        }, function(_data, status) {
                                             $.each(_data.data, function(i, obj) {
                                                 obj.name = obj.first_name + ' ' + obj.last_name;
                                                 obj.endpoint_type = 'user';
@@ -1702,258 +1775,322 @@ winkstart.module('voip', 'callflow', {
                                                 }
                                             });
 
-                                            popup_html = THIS.templates.ring_group_dialog.tmpl({
-                                                form: {
-                                                    name: node.getMetadata('name') || '',
-                                                    strategy: {
-                                                        items: [
-                                                            {
-                                                                id: 'simultaneous',
-                                                                name: 'At the same time'
+                                            winkstart.request('media.list', {
+                                                    account_id: winkstart.apps['voip'].account_id,
+                                                    api_url: winkstart.apps['voip'].api_url
+                                                },
+                                                function(_data, status) {
+                                                    var media_array = _data.data.sort(function(a,b) {
+                                                        return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
+                                                    });
+
+                                                    popup_html = THIS.templates.ring_group_dialog.tmpl({
+        												_t: function(param){
+        													return window.translate['callflow'][param];
+        												},
+                                                        form: {
+                                                            name: node.getMetadata('name') || '',
+                                                            strategy: {
+                                                                items: [
+                                                                    {
+                                                                        id: 'simultaneous',
+                                                                        name: _t('callflow', 'at_the_same_time')
+                                                                    },
+                                                                    {
+                                                                        id: 'single',
+                                                                        name: _t('callflow', 'in_order')
+                                                                    }
+                                                                ],
+                                                                selected: node.getMetadata('strategy') || 'simultaneous'
                                                             },
-                                                            {
-                                                                id: 'single',
-                                                                name: 'In order'
+                                                            timeout: node.getMetadata('timeout') || '30',
+                                                            ringback: {
+                                                                items: $.merge([
+                                                                    {
+                                                                        id: 'default',
+                                                                        name: _t('callflow', 'default'),
+                                                                        class: 'uneditable'
+                                                                    },
+                                                                    {
+                                                                        id: 'silence_stream://300000',
+                                                                        name: _t('callflow', 'silence'),
+                                                                        class: 'uneditable'
+                                                                    }
+                                                                ], media_array),
+                                                                selected: node.getMetadata('ringback') || 'default'
                                                             }
-                                                        ],
-                                                        selected: node.getMetadata('strategy') || 'simultaneous'
-                                                    },
-                                                    timeout: node.getMetadata('timeout') || '30'
-                                                }
-                                            });
-                                            $.each(unselected_groups, function() {
-                                                $('#groups_pane .connect.left', popup_html).append(THIS.templates.ring_group_element.tmpl(this));
-                                            });
+                                                        }
+                                                    });
+                                                    $.each(unselected_groups, function() {
+                                                        $('#groups_pane .connect.left', popup_html).append(THIS.templates.ring_group_element.tmpl(this));
+                                                    });
 
-                                            $.each(unselected_devices, function() {
-                                                $('#devices_pane .connect.left', popup_html).append(THIS.templates.ring_group_element.tmpl(this));
-                                            });
+                                                    $.each(unselected_devices, function() {
+                                                        $('#devices_pane .connect.left', popup_html).append(THIS.templates.ring_group_element.tmpl(this));
+                                                    });
 
-                                            $.each(unselected_users, function() {
-                                                $('#users_pane .connect.left', popup_html).append(THIS.templates.ring_group_element.tmpl(this));
-                                            });
+                                                    $.each(unselected_users, function() {
+                                                        $('#users_pane .connect.left', popup_html).append(THIS.templates.ring_group_element.tmpl(this));
+                                                    });
 
-                                            $.each(selected_endpoints, function() {
-                                                //Check if user/device exists.
-                                                if(this.endpoint_type) {
-                                                    $('.connect.right', popup_html).append(THIS.templates.ring_group_element.tmpl(this));
-                                                }
-                                            });
+                                                    $.each(selected_endpoints, function() {
+                                                        //Check if user/device exists.
+                                                        if(this.endpoint_type) {
+                                                            $('.connect.right', popup_html).append(THIS.templates.ring_group_element.tmpl(this));
+                                                        }
+                                                    });
 
-                                            $('#name', popup_html).bind('keyup blur change', function() {
-                                                $('.column.right .title', popup_html).html('Ring Group - ' + $(this).val());
-                                            });
+                                                    $('#name', popup_html).bind('keyup blur change', function() {
+                                                        $('.column.right .title', popup_html).html(_t('callflow', 'ring_group_val') + $(this).val());
+                                                    });
 
-                                            $('ul.settings1 > li > a', popup_html).click(function(item) {
-                                                $('.pane_content', popup_html).hide();
+                                                    $('#ringback', popup_html).change(function(e) {
+                                                        if($(this).find('option:selected').hasClass('uneditable')) {
+                                                            $('.media_action[data-action="edit"]', popup_html).hide();
+                                                        } else {
+                                                            $('.media_action[data-action="edit"]', popup_html).show();
+                                                        }
+                                                    });
 
-                                                //Reset Search field
-                                                $('.searchfield', popup_html).val('');
-                                                $('.column.left li', popup_html).show();
+                                                    $('.media_action', popup_html).click(function(e) {
+                                                        var isCreation = $(this).data('action') === 'create',
+                                                            mediaData = isCreation ? {} : { id: $('#ringback', popup_html).val() };
 
-                                                $('ul.settings1 > li', popup_html).removeClass('current');
+                                                        winkstart.publish('media.popup_edit', mediaData, function(_mediaData) {
+                                                            if(_mediaData.data && _mediaData.data.id) {
+                                                                if(isCreation) {
+                                                                    $('#ringback', popup_html).append('<option value="'+_mediaData.data.id+'">'+_mediaData.data.name+'</option>');
+                                                                } else {
+                                                                    $('#ringback option[value="'+_mediaData.data.id+'"]', popup_html).text(_mediaData.data.name);
+                                                                }
+                                                                $('#ringback', popup_html).val(_mediaData.data.id);
+                                                            }
+                                                        });
+                                                    });
 
-                                                var tab_id = $(this).attr('id');
+                                                    $('ul.settings1 > li > a', popup_html).click(function(item) {
+                                                        $('.pane_content', popup_html).hide();
 
-                                                if(tab_id  === 'users_tab_link') {
-                                                    $('#users_pane', popup_html).show();
-                                                }
-                                                else if(tab_id === 'devices_tab_link') {
-                                                    $('#devices_pane', popup_html).show();
-                                                }
-                                                else if(tab_id === 'groups_tab_link') {
-                                                    $('#groups_pane', popup_html).show();
-                                                }
+                                                        //Reset Search field
+                                                        $('.searchfield', popup_html).val('');
+                                                        $('.column.left li', popup_html).show();
 
-                                                $(this).parent().addClass('current');
-                                            });
+                                                        $('ul.settings1 > li', popup_html).removeClass('current');
 
-                                            $('.searchsubmit2', popup_html).click(function() {
-                                                $('.searchfield', popup_html).val('');
-                                                $('.column li', popup_html).show();
-                                            });
+                                                        var tab_id = $(this).attr('id');
 
-                                            $('#devices_pane .searchfield', popup_html).keyup(function() {
-                                                $('#devices_pane .column.left li').each(function() {
-                                                    if($('.item_name', $(this)).html().toLowerCase().indexOf($('#devices_pane .searchfield', popup_html).val().toLowerCase()) == -1) {
-                                                        $(this).hide();
-                                                    }
-                                                    else {
-                                                        $(this).show();
-                                                    }
-                                                });
-                                            });
-
-                                            $('#users_pane .searchfield', popup_html).keyup(function() {
-                                                $('#users_pane .column.left li').each(function() {
-                                                    if($('.item_name', $(this)).html().toLowerCase().indexOf($('#users_pane .searchfield', popup_html).val().toLowerCase()) == -1) {
-                                                        $(this).hide();
-                                                    }
-                                                    else {
-                                                        $(this).show();
-                                                    }
-                                                });
-                                            });
-
-                                            $('#groups_pane .searchfield', popup_html).keyup(function() {
-                                                $('#groups_pane .column.left li').each(function() {
-                                                    if($('.item_name', $(this)).html().toLowerCase().indexOf($('#groups_pane .searchfield', popup_html).val().toLowerCase()) == -1) {
-                                                        $(this).hide();
-                                                    }
-                                                    else {
-                                                        $(this).show();
-                                                    }
-                                                });
-                                            });
-
-                                            if(jQuery.isEmptyObject(selected_endpoints)) {
-                                                $('.column.right .connect', popup_html).addClass('no_element');
-                                            }
-                                            else {
-                                                $('.column.right .connect', popup_html).removeClass('no_element');
-                                            }
-
-                                            $('.column.left .options', popup_html).hide();
-                                            $('.column.left .actions', popup_html).hide();
-
-                                            $('.options .option.delay', popup_html).bind('keyup', function() {
-                                                $(this).parents('li').dataset('delay', $(this).val());
-                                            });
-
-                                            $('.options .option.timeout', popup_html).bind('keyup', function() {
-                                                $(this).parents('li').dataset('timeout', $(this).val());
-                                            });
-
-                                            $('#save_ring_group', popup_html).click(function() {
-                                                var name = $('#name', popup_html).val(),
-                                                    global_timeout = 0,
-                                                    strategy = $('#strategy', popup_html).val();
-
-                                                endpoints = [];
-
-                                                if(strategy === 'simultaneous') {
-                                                    var computeTimeout = function(delay, local_timeout, global_timeout) {
-                                                        var duration = delay + local_timeout;
-
-                                                        if(duration > global_timeout) {
-                                                            global_timeout = duration;
+                                                        if(tab_id  === 'users_tab_link') {
+                                                            $('#users_pane', popup_html).show();
+                                                        }
+                                                        else if(tab_id === 'devices_tab_link') {
+                                                            $('#devices_pane', popup_html).show();
+                                                        }
+                                                        else if(tab_id === 'groups_tab_link') {
+                                                            $('#groups_pane', popup_html).show();
                                                         }
 
-                                                        return global_timeout;
-                                                    }
-                                                }
-                                                else {
-                                                    var computeTimeout = function(delay, local_timeout, global_timeout) {
-                                                        global_timeout += delay + local_timeout;
+                                                        $(this).parent().addClass('current');
+                                                    });
 
-                                                        return global_timeout;
-                                                    }
-                                                }
+                                                    $('.searchsubmit2', popup_html).click(function() {
+                                                        $('.searchfield', popup_html).val('');
+                                                        $('.column li', popup_html).show();
+                                                    });
 
-                                                $('.right .connect li', popup_html).each(function() {
-                                                    var item_data = $(this).dataset();
-                                                    delete item_data.owner_id;
-                                                    endpoints.push(item_data);
-                                                    global_timeout = computeTimeout(parseFloat(item_data.delay), parseFloat(item_data.timeout), global_timeout);
-                                                });
-
-                                                node.setMetadata('endpoints', endpoints);
-                                                node.setMetadata('name', name);
-                                                node.setMetadata('strategy', strategy);
-                                                node.setMetadata('timeout', global_timeout);
-
-                                                node.caption = name;
-
-                                                popup.dialog('close');
-                                            });
-
-                                            popup = winkstart.dialog(popup_html, {
-                                                title: 'Ring Group',
-                                                beforeClose: function() {
-                                                    if(typeof callback == 'function') {
-                                                        callback();
-                                                    }
-                                                }
-                                            });
-
-                                            $('.scrollable', popup).jScrollPane({
-                                                horizontalDragMinWidth: 0,
-                                                horizontalDragMaxWidth: 0
-                                            });
-
-                                            $('.connect', popup).sortable({
-                                                connectWith: $('.connect.right', popup),
-                                                zIndex: 2000,
-                                                helper: 'clone',
-                                                appendTo: $('.wrapper', popup),
-                                                scroll: false,
-                                                receive: function(ev, ui) {
-                                                    var data = ui.item.dataset(),
-                                                        list_li = [],
-                                                        confirm_text;
-
-                                                    if(data.endpoint_type === 'device') {
-                                                        confirm_text = 'The owner of this device is already in the ring group. By adding this device, you will remove the User from this ring group. Would you like to continue anyway?';
-                                                        $('.connect.right li', popup_html).each(function() {
-                                                            if($(this).dataset('id') === data.owner_id) {
-                                                                list_li.push($(this));
+                                                    $('#devices_pane .searchfield', popup_html).keyup(function() {
+                                                        $('#devices_pane .column.left li').each(function() {
+                                                            if($('.item_name', $(this)).html().toLowerCase().indexOf($('#devices_pane .searchfield', popup_html).val().toLowerCase()) == -1) {
+                                                                $(this).hide();
+                                                            }
+                                                            else {
+                                                                $(this).show();
                                                             }
                                                         });
-                                                    }
-                                                    else if(data.endpoint_type === 'user') {
-                                                        confirm_text = 'This user has already some devices belonging to him in this ring group. By adding him to the ring group, you will remove devices that were already in the ring group. Would you like to continue anyway?';
-                                                        $('.connect.right li', popup_html).each(function() {
-                                                            if($(this).dataset('owner_id') === data.id) {
-                                                                list_li.push($(this));
+                                                    });
+
+                                                    $('#users_pane .searchfield', popup_html).keyup(function() {
+                                                        $('#users_pane .column.left li').each(function() {
+                                                            if($('.item_name', $(this)).html().toLowerCase().indexOf($('#users_pane .searchfield', popup_html).val().toLowerCase()) == -1) {
+                                                                $(this).hide();
+                                                            }
+                                                            else {
+                                                                $(this).show();
                                                             }
                                                         });
+                                                    });
+
+                                                    $('#groups_pane .searchfield', popup_html).keyup(function() {
+                                                        $('#groups_pane .column.left li').each(function() {
+                                                            if($('.item_name', $(this)).html().toLowerCase().indexOf($('#groups_pane .searchfield', popup_html).val().toLowerCase()) == -1) {
+                                                                $(this).hide();
+                                                            }
+                                                            else {
+                                                                $(this).show();
+                                                            }
+                                                        });
+                                                    });
+
+                                                    if(jQuery.isEmptyObject(selected_endpoints)) {
+                                                        $('.column.right .connect', popup_html).addClass('no_element');
+                                                    }
+                                                    else {
+                                                        $('.column.right .connect', popup_html).removeClass('no_element');
                                                     }
 
-                                                    if(list_li.length > 0) {
-                                                        winkstart.confirm(confirm_text,
-                                                            function() {
-                                                                $.each(list_li, function() {
-                                                                    remove_element(this);
+                                                    $('.column.left .options', popup_html).hide();
+                                                    $('.column.left .actions', popup_html).hide();
+
+                                                    $('.options .option.delay', popup_html).bind('keyup', function() {
+                                                        $(this).parents('li').dataset('delay', $(this).val());
+                                                    });
+
+                                                    $('.options .option.timeout', popup_html).bind('keyup', function() {
+                                                        $(this).parents('li').dataset('timeout', $(this).val());
+                                                    });
+
+                                                    $('#save_ring_group', popup_html).click(function() {
+                                                        var name = $('#name', popup_html).val(),
+                                                            global_timeout = 0,
+                                                            strategy = $('#strategy', popup_html).val(),
+                                                            ringback = $('#ringback', popup_html).val();
+
+                                                        endpoints = [];
+
+                                                        if(strategy === 'simultaneous') {
+                                                            var computeTimeout = function(delay, local_timeout, global_timeout) {
+                                                                var duration = delay + local_timeout;
+
+                                                                if(duration > global_timeout) {
+                                                                    global_timeout = duration;
+                                                                }
+
+                                                                return global_timeout;
+                                                            }
+                                                        }
+                                                        else {
+                                                            var computeTimeout = function(delay, local_timeout, global_timeout) {
+                                                                global_timeout += delay + local_timeout;
+
+                                                                return global_timeout;
+                                                            }
+                                                        }
+
+                                                        $('.right .connect li', popup_html).each(function() {
+                                                            var item_data = $(this).dataset();
+                                                            delete item_data.owner_id;
+                                                            endpoints.push(item_data);
+                                                            global_timeout = computeTimeout(parseFloat(item_data.delay), parseFloat(item_data.timeout), global_timeout);
+                                                        });
+
+                                                        node.setMetadata('endpoints', endpoints);
+                                                        node.setMetadata('name', name);
+                                                        node.setMetadata('strategy', strategy);
+                                                        node.setMetadata('timeout', global_timeout);
+                                                        if(ringback === 'default') {
+                                                            node.deleteMetadata('ringback', ringback);
+                                                        } else {
+                                                            node.setMetadata('ringback', ringback);
+                                                        }
+
+                                                        node.caption = name;
+
+                                                        popup.dialog('close');
+                                                    });
+
+                                                    popup = winkstart.dialog(popup_html, {
+                                                        title: _t('callflow', 'ring_group'),
+                                                        beforeClose: function() {
+                                                            if(typeof callback == 'function') {
+                                                                callback();
+                                                            }
+                                                        }
+                                                    });
+
+                                                    $('.scrollable', popup).jScrollPane({
+                                                        horizontalDragMinWidth: 0,
+                                                        horizontalDragMaxWidth: 0
+                                                    });
+
+                                                    $('.connect', popup).sortable({
+                                                        connectWith: $('.connect.right', popup),
+                                                        zIndex: 2000,
+                                                        helper: 'clone',
+                                                        appendTo: $('.wrapper', popup),
+                                                        scroll: false,
+                                                        receive: function(ev, ui) {
+                                                            var data = ui.item.dataset(),
+                                                                list_li = [],
+                                                                confirm_text;
+
+                                                            if(data.endpoint_type === 'device') {
+                                                                confirm_text = _t('callflow', 'the_owner_of_this_device_is_already');
+                                                                $('.connect.right li', popup_html).each(function() {
+                                                                    if($(this).dataset('id') === data.owner_id) {
+                                                                        list_li.push($(this));
+                                                                    }
                                                                 });
-                                                            },
-                                                            function() {
-                                                                remove_element(ui.item);
                                                             }
-                                                        );
+                                                            else if(data.endpoint_type === 'user') {
+                                                                confirm_text = _t('callflow', 'this_user_has_already_some_devices');
+                                                                $('.connect.right li', popup_html).each(function() {
+                                                                    if($(this).dataset('owner_id') === data.id) {
+                                                                        list_li.push($(this));
+                                                                    }
+                                                                });
+                                                            }
+
+                                                            if(list_li.length > 0) {
+                                                                winkstart.confirm(confirm_text,
+                                                                    function() {
+                                                                        $.each(list_li, function() {
+                                                                            remove_element(this);
+                                                                        });
+                                                                    },
+                                                                    function() {
+                                                                        remove_element(ui.item);
+                                                                    }
+                                                                );
+                                                            }
+
+                                                            if($(this).hasClass('right')) {
+                                                                $('.options', ui.item).show();
+                                                                $('.actions', ui.item).show();
+                                                                //$('.item_name', ui.item).addClass('right');
+                                                                $('.column.right .connect', popup).removeClass('no_element');
+                                                            }
+                                                        }
+                                                    });
+
+                                                    $(popup_html).delegate('.trash', 'click', function() {
+                                                        var $parent_li = $(this).parents('li').first();
+                                                        remove_element($parent_li);
+                                                    });
+
+                                                    $('.pane_content', popup_html).hide();
+                                                    $('#users_pane', popup_html).show();
+                                                    if($('#ringback option:selected').hasClass('uneditable')) {
+                                                        $('.media_action[data-action="edit"]', popup_html).hide();
+                                                    } else {
+                                                        $('.media_action[data-action="edit"]', popup_html).show();
                                                     }
 
-                                                    if($(this).hasClass('right')) {
-                                                        $('.options', ui.item).show();
-                                                        $('.actions', ui.item).show();
-                                                        //$('.item_name', ui.item).addClass('right');
-                                                        $('.column.right .connect', popup).removeClass('no_element');
-                                                    }
+                                                    var remove_element = function(li) {
+                                                        var $parent_li = li;
+                                                        var data = $parent_li.dataset();
+                                                        data.name = jQuery.trim($('.item_name', $parent_li).html());
+                                                        $('#'+data.endpoint_type+'s_pane .connect.left', popup_html).append(THIS.templates.ring_group_element.tmpl(data));
+                                                        $parent_li.remove();
+
+                                                        if($('.connect.right li', popup_html).size() == 0) {
+                                                            $('.column.right .connect', popup).addClass('no_element');
+                                                        }
+
+                                                        if(data.name.toLowerCase().indexOf($('#'+data.endpoint_type+'s_pane .searchfield', popup_html).val().toLowerCase()) == -1) {
+                                                            $('#'+data.id, popup_html).hide();
+                                                        }
+                                                    };
                                                 }
-                                            });
-
-                                            $(popup_html).delegate('.trash', 'click', function() {
-                                                var $parent_li = $(this).parents('li').first();
-                                                remove_element($parent_li);
-                                            });
-
-                                            $('.pane_content', popup_html).hide();
-                                            $('#users_pane', popup_html).show();
-
-                                            var remove_element = function(li) {
-                                                var $parent_li = li;
-                                                var data = $parent_li.dataset();
-                                                data.name = jQuery.trim($('.item_name', $parent_li).html());
-                                                $('#'+data.endpoint_type+'s_pane .connect.left', popup_html).append(THIS.templates.ring_group_element.tmpl(data));
-                                                $parent_li.remove();
-
-                                                if($('.connect.right li', popup_html).size() == 0) {
-                                                    $('.column.right .connect', popup).addClass('no_element');
-                                                }
-
-                                                if(data.name.toLowerCase().indexOf($('#'+data.endpoint_type+'s_pane .searchfield', popup_html).val().toLowerCase()) == -1) {
-                                                    $('#'+data.id, popup_html).hide();
-                                                }
-                                            };
+                                            );
                                         }
                                     );
                                 }
@@ -1975,11 +2112,11 @@ winkstart.module('voip', 'callflow', {
                 },
 
                 'callflow[id=*]': {
-                    name: 'Callflow',
+                    name: _t('callflow', 'callflow'),
                     icon: 'callflow',
-                    category: 'Advanced',
+                    category: _t('config', 'advanced_cat'),
                     module: 'callflow',
-                    tip: 'Transfer the call to another call flow',
+                    tip: _t('callflow', 'callflow_tip'),
                     data: {
                         id: 'null'
                     },
@@ -2010,13 +2147,16 @@ winkstart.module('voip', 'callflow', {
 
                                 $.each(data.data, function() {
                                     if(!this.featurecode && this.id != THIS.flow.id) {
-                                        this.name = this.name ? this.name : ((this.numbers) ? this.numbers.toString() : '(no numbers)');
+                                        this.name = this.name ? this.name : ((this.numbers) ? this.numbers.toString() : _t('callflow', 'no_numbers'));
 
                                         _data.push(this);
                                     }
                                 });
 
                                 popup_html = THIS.templates.edit_dialog.tmpl({
+									_t: function(param){
+										return window.translate['callflow'][param];
+									},
                                     objects: {
                                         type: 'callflow',
                                         items: _data,
@@ -2033,7 +2173,7 @@ winkstart.module('voip', 'callflow', {
                                 });
 
                                 popup = winkstart.dialog(popup_html, {
-                                    title: 'Callflow',
+                                    title: _t('callflow', 'callflow_title'),
                                     beforeClose: function() {
                                         if(typeof callback == 'function') {
                                             callback();
@@ -2045,11 +2185,11 @@ winkstart.module('voip', 'callflow', {
                     }
                 },
                 'page_group[]': {
-                    name: 'Page Group',
+                    name: _t('callflow', 'page_group'),
                     icon: 'ring_group',
-                    category: 'Advanced',
+                    category: _t('config', 'advanced_cat'),
                     module: 'page_group',
-                    tip: 'Ring several VoIP or cell phones',
+                    tip:  _t('callflow', 'page_group_tip'),
                     data: {
                         name: ''
                     },
@@ -2068,11 +2208,11 @@ winkstart.module('voip', 'callflow', {
                     }
                 },
                 'ring_group[]': {
-                    name: 'Ring Group',
+                    name: _t('callflow', 'ring_group'),
                     icon: 'ring_group',
-                    category: 'Basic',
+                    category: _t('config', 'basic_cat'),
                     module: 'ring_group',
-                    tip: 'Ring several VoIP or cell phones in order or at the same time',
+                    tip: _t('callflow', 'ring_group_tip'),
                     data: {
                         name: ''
                     },
@@ -2091,11 +2231,11 @@ winkstart.module('voip', 'callflow', {
                     }
                 },
                 'call_forward[action=activate]': {
-                    name: 'Enable call forwarding',
+                    name: _t('callflow', 'enable_call_forwarding'),
                     icon: 'rightarrow',
-                    category: 'Call Forwarding',
+                    category: _t('config', 'call_forwarding_cat'),
                     module: 'call_forward',
-                    tip: 'Enable call forwarding (using the last forwaded number)',
+                    tip: _t('callflow', 'enable_call_forwarding_tip'),
                     data: {
                         action: 'activate'
                     },
@@ -2116,11 +2256,11 @@ winkstart.module('voip', 'callflow', {
                     }
                 },
                 'call_forward[action=deactivate]': {
-                    name: 'Disable call forwarding',
+                    name: _t('callflow', 'disable_call_forwarding'),
                     icon: 'rightarrow',
-                    category: 'Call Forwarding',
+                    category: _t('config', 'call_forwarding_cat'),
                     module: 'call_forward',
-                    tip: 'Disable call forwarding',
+                    tip: _t('callflow', 'disable_call_forwarding_tip'),
                     data: {
                         action: 'deactivate'
                     },
@@ -2141,11 +2281,11 @@ winkstart.module('voip', 'callflow', {
                     }
                 },
                 'call_forward[action=update]': {
-                    name: 'Update call forwarding',
+                    name: _t('callflow', 'update_call_forwarding'),
                     icon: 'rightarrow',
-                    category: 'Call Forwarding',
+                    category: _t('config', 'call_forwarding_cat'),
                     module: 'call_forward',
-                    tip: 'Update the call forwarding number',
+                    tip: _t('callflow', 'update_call_forwarding_tip'),
                     data: {
                         action: 'update'
                     },
@@ -2166,11 +2306,11 @@ winkstart.module('voip', 'callflow', {
                     }
                 },
                 'dynamic_cid[]': {
-                    name: 'Dynamic cid',
+                    name: _t('callflow', 'dynamic_cid'),
                     icon: 'rightarrow',
-                    category: 'Caller ID',
+                    category: _t('config', 'caller_id_cat'),
                     module: 'dynamic_cid',
-                    tip: 'Set your CallerId by entering it on the phone',
+                    tip: _t('callflow', 'dynamic_cid_tip'),
                     isUsable: 'true',
                     caption: function(node, caption_map) {
                         return '';
@@ -2182,11 +2322,11 @@ winkstart.module('voip', 'callflow', {
                     }
                 },
                 'prepend_cid[action=prepend]': {
-                    name: 'Prepend',
+                    name: _t('callflow', 'prepend'),
                     icon: 'plus_circle',
-                    category: 'Caller ID',
+                    category: _t('config', 'caller_id_cat'),
                     module: 'prepend_cid',
-                    tip: 'Prepend Caller ID with a text.',
+                    tip: _t('callflow', 'prepend_tip'),
                     data: {
                         action: 'prepend',
                         caller_id_name_prefix: '',
@@ -2206,6 +2346,9 @@ winkstart.module('voip', 'callflow', {
                         var popup, popup_html;
 
                         popup_html = THIS.templates.prepend_cid_callflow.tmpl({
+							_t: function(param){
+								return window.translate['callflow'][param];
+							},
                             data_cid: {
                                 'caller_id_name_prefix': node.getMetadata('caller_id_name_prefix') || '',
                                 'caller_id_number_prefix': node.getMetadata('caller_id_number_prefix') || ''
@@ -2225,7 +2368,7 @@ winkstart.module('voip', 'callflow', {
                         });
 
                         popup = winkstart.dialog(popup_html, {
-                            title: 'Prepend Caller-ID',
+                            title: _t('callflow', 'prepend_caller_id_title'),
                             minHeight: '0',
                             beforeClose: function() {
                                 if(typeof callback == 'function') {
@@ -2240,11 +2383,11 @@ winkstart.module('voip', 'callflow', {
                     }
                 },
                 'prepend_cid[action=reset]': {
-                    name: 'Reset Prepend',
+                    name: _t('callflow', 'reset_prepend'),
                     icon: 'loop2',
-                    category: 'Caller ID',
+                    category: _t('config', 'caller_id_cat'),
                     module: 'prepend_cid',
-                    tip: 'Reset all the prepended texts before the Caller ID.',
+                    tip: _t('callflow', 'reset_prepend_tip'),
                     data: {
                         action: 'reset'
                     },
@@ -2265,11 +2408,11 @@ winkstart.module('voip', 'callflow', {
                     }
                 },
                 'manual_presence[]': {
-                    name: 'Manual Presence',
+                    name: _t('callflow', 'manual_presence'),
                     icon: 'lightbulb_on',
-                    category: 'Advanced',
+                    category: _t('config', 'advanced_cat'),
                     module: 'manual_presence',
-                    tip: 'Manual Presence Help',
+                    tip: _t('callflow', 'manual_presence_tip'),
                     data: {
                     },
                     rules: [
@@ -2286,6 +2429,9 @@ winkstart.module('voip', 'callflow', {
                         var popup, popup_html;
 
                         popup_html = THIS.templates.presence_callflow.tmpl({
+							_t: function(param){
+								return window.translate['callflow'][param];
+							},
                             data_presence: {
                                 'presence_id': node.getMetadata('presence_id') || '',
                                 'status': node.getMetadata('status') || 'busy'
@@ -2303,7 +2449,7 @@ winkstart.module('voip', 'callflow', {
                         });
 
                         popup = winkstart.dialog(popup_html, {
-                            title: 'Manual Presence',
+                            title: _t('callflow', 'manual_presence_title'),
                             beforeClose: function() {
                                 if(typeof callback == 'function') {
                                      callback();
@@ -2312,12 +2458,91 @@ winkstart.module('voip', 'callflow', {
                         });
                     }
                 },
-                'receive_fax[]': {
-                    name: 'Receive Fax',
+                'group_pickup[]': {
+                    name: _t('callflow', 'group_pickup'),
                     icon: 'sip',
-                    category: 'Advanced',
+                    category: _t('config', 'advanced_cat'),
+                    module: 'group_pickup',
+                    tip: _t('callflow', 'group_pickup_tip'),
+                    data: {
+                    },
+                    rules: [
+                        {
+                            type: 'quantity',
+                            maxSize: '0'
+                        }
+                    ],
+                    isUsable: 'true',
+                    caption: function(node, caption_map) {
+                        return node.getMetadata('name') || '';
+                    },
+                    edit: function(node, callback) {
+                    	winkstart.parallel({
+								groups: function(callback) {
+									THIS.groups_list(function(groups) {
+										callback(null, groups);
+									});
+								},
+								users: function(callback) {
+									THIS.users_list(function(users) {
+										callback(null, users);
+									});
+								},
+								devices: function(callback) {
+									THIS.devices_list(function(devices) {
+										callback(null, devices);
+									});
+								}
+							},
+							function(err, results) {
+								var popup, popup_html;
+
+                                popup_html = THIS.templates.group_pickup.tmpl({
+									_t: function(param){
+										return window.translate['callflow'][param];
+									},
+                                    data: {
+                                        items: results,
+                                        selected: node.getMetadata('device_id') || node.getMetadata('group_id') || node.getMetadata('user_id') || ''
+                                    }
+                                });
+
+								$('#add', popup_html).click(function() {
+									var selector = $('#endpoint_selector', popup_html),
+										id = selector.val(),
+										name = selector.find('#'+id).html(),
+										type = $('#'+ id, popup_html).data('type'),
+									    type_id = type.substring(type, type.length - 1) + '_id';
+
+									/* Clear all the useless attributes */
+									node.data.data = {};
+                                    node.setMetadata(type_id, id);
+                                    node.setMetadata('name', name);
+
+                                    node.caption = name;
+
+                                    popup.dialog('close');
+                                });
+
+                                popup = winkstart.dialog(popup_html, {
+                                    title: _t('callflow', 'select_endpoint_title'),
+                                    minHeight: '0',
+                                    beforeClose: function() {
+                                        if(typeof callback == 'function') {
+                                            callback();
+                                        }
+                                    }
+                                });
+							}
+                    	);
+                    }
+                },
+                'receive_fax[]': {
+                    name: _t('callflow', 'receive_fax'),
+                    icon: 'sip',
+                    category: _t('config', 'advanced_cat'),
                     module: 'receive_fax',
-                    tip: 'Directs a fax to a specific user',
+                    tip: _t('callflow', 'receive_fax_tip'),
                     data: {
                         owner_id: null
                     },
@@ -2344,6 +2569,9 @@ winkstart.module('voip', 'callflow', {
                                 });
 
                                 popup_html = THIS.templates.fax_callflow.tmpl({
+									_t: function(param){
+										return window.translate['callflow'][param];
+									},
                                     objects: {
                                         items: data.data,
                                         selected: node.getMetadata('owner_id') || ''
@@ -2374,7 +2602,7 @@ winkstart.module('voip', 'callflow', {
                                 });
 
                                 popup = winkstart.dialog(popup_html, {
-                                    title: 'Select User',
+                                    title: _t('callflow', 'select_user_title'),
                                     minHeight: '0',
                                     beforeClose: function() {
                                         if(typeof callback == 'function') {
@@ -2386,12 +2614,86 @@ winkstart.module('voip', 'callflow', {
                         );
                     }
                 },
-                'pivot[]': {
-                    name: 'Pivot',
+                'record_call[action=start]': {
+                    name: _t('callflow', 'start_call_recording'),
                     icon: 'conference',
-                    category: 'Advanced',
+                    category: _t('config', 'call_recording_cat'),
+                    module: 'record_call',
+                    tip: _t('callflow', 'start_call_recording_tip'),
+                    data: {
+                        action: 'start'
+                    },
+                    rules: [
+                        {
+                            type: 'quantity',
+                            maxSize: '1'
+                        }
+                    ],
+                    isUsable: 'true',
+                    caption: function(node) {
+                        return '';
+                    },
+                    edit: function(node, callback) {
+                        var popup, popup_html;
+
+                        popup_html = THIS.templates.call_record_callflow.tmpl({
+							_t: function(param){
+								return window.translate['callflow'][param];
+							},
+                            data_call_record: {
+                                'format': node.getMetadata('format') || 'mp3',
+                                'url': node.getMetadata('url') || '',
+                                'time_limit': node.getMetadata('time_limit') || '600'
+                            }
+                        });
+
+                        $('#add', popup_html).click(function() {
+                            node.setMetadata('url', $('#url', popup_html).val());
+                            node.setMetadata('format', $('#format', popup_html).val());
+                            node.setMetadata('time_limit', $('#time_limit', popup_html).val());
+
+                            popup.dialog('close');
+                        });
+
+                        popup = winkstart.dialog(popup_html, {
+                            title: _t('callflow', 'start_call_recording'),
+                            minHeight: '0',
+                            beforeClose: function() {
+                                if(typeof callback == 'function') {
+                                     callback();
+                                }
+                            }
+                        });
+                    }
+                },
+                'record_call[action=stop]': {
+                    name: _t('callflow', 'stop_call_recording'),
+                    icon: 'conference',
+                    category: _t('config', 'call_recording_cat'),
+                    module: 'record_call',
+                    tip: _t('callflow', 'stop_call_recording_tip'),
+                    data: {
+                        action: 'stop'
+                    },
+                    rules: [
+                        {
+                            type: 'quantity',
+                            maxSize: '1'
+                        }
+                    ],
+                    isUsable: 'true',
+                    caption: function(node) {
+                        return '';
+                    },
+                    edit: function(node, callback) {
+                    }
+                },
+                'pivot[]': {
+                    name: _t('callflow', 'pivot'),
+                    icon: 'conference',
+                    category: _t('config', 'advanced_cat'),
                     module: 'pivot',
-                    tip: '',
+                    tip: _t('callflow', 'pivot_tip'),
                     data: {
                         method: 'get',
                         req_timeout: '5',
@@ -2412,6 +2714,9 @@ winkstart.module('voip', 'callflow', {
                         var popup, popup_html;
 
                         popup_html = THIS.templates.pivot_callflow.tmpl({
+							_t: function(param){
+								return window.translate['callflow'][param];
+							},
                             data_pivot: {
                                 'method': node.getMetadata('method') || 'get',
                                 'voice_url': node.getMetadata('voice_url') || '',
@@ -2429,7 +2734,7 @@ winkstart.module('voip', 'callflow', {
                         });
 
                         popup = winkstart.dialog(popup_html, {
-                            title: 'Pivot',
+                            title: _t('callflow', 'pivot_title'),
                             minHeight: '0',
                             beforeClose: function() {
                                 if(typeof callback == 'function') {
@@ -2440,11 +2745,11 @@ winkstart.module('voip', 'callflow', {
                     }
                 },
                 'disa[]': {
-                    name: 'DISA',
+                    name: _t('callflow', 'disa'),
                     icon: 'conference',
-                    category: 'Advanced',
+                    category: _t('config', 'advanced_cat'),
                     module: 'disa',
-                    tip: 'DISA allows external callers to make outbound calls as though they originated from the system',
+                    tip: _t('callflow', 'disa_tip'),
                     data: {
                         pin: '',
                         retries: '3'
@@ -2463,6 +2768,9 @@ winkstart.module('voip', 'callflow', {
                         var popup, popup_html;
 
                         popup_html = THIS.templates.disa_callflow.tmpl({
+							_t: function(param){
+								return window.translate['callflow'][param];
+							},
                             data_disa: {
                                 'pin': node.getMetadata('pin') || '',
                                 'retries': node.getMetadata('retries') || '3'
@@ -2477,7 +2785,7 @@ winkstart.module('voip', 'callflow', {
                                 popup.dialog('close');
                             };
                             if($('#disa_pin_input', popup_html).val() == '') {
-                                winkstart.confirm('Not setting a PIN is a security risk, are you sure you don\'t want to set a PIN?', function() {
+                                winkstart.confirm(_t('callflow', 'not_setting_a_pin'), function() {
                                     save_disa();
                                 });
                             }
@@ -2487,7 +2795,7 @@ winkstart.module('voip', 'callflow', {
                         });
 
                         popup = winkstart.dialog(popup_html, {
-                            title: 'DISA',
+                            title: _t('callflow', 'disa_title'),
                             minHeight: '0',
                             beforeClose: function() {
                                 if(typeof callback == 'function') {
@@ -2498,11 +2806,11 @@ winkstart.module('voip', 'callflow', {
                     }
                 },
                 'response[]': {
-                    name: 'Response',
+                    name: _t('callflow', 'response'),
                     icon: 'rightarrow',
-                    category: 'Advanced',
+                    category: _t('config', 'advanced_cat'),
                     module: 'response',
-                    tip: 'Return a custom SIP error code',
+                    tip: _t('callflow', 'response_tip'),
                     data: {
                         code: '',
                         message: '',
@@ -2516,7 +2824,7 @@ winkstart.module('voip', 'callflow', {
                     ],
                     isUsable: 'true',
                     caption: function(node, caption_map) {
-                        return 'SIP Code: ' + node.getMetadata('code');
+                        return _t('callflow', 'sip_code_caption') + node.getMetadata('code');
                     },
                     edit: function(node, callback) {
                         winkstart.request(true, 'callflow.list_media', {
@@ -2527,6 +2835,9 @@ winkstart.module('voip', 'callflow', {
                                 var popup, popup_html;
 
                                 popup_html = THIS.templates.response_callflow.tmpl({
+									_t: function(param){
+										return window.translate['callflow'][param];
+									},
                                     response_data: {
                                         items: data.data,
                                         media_enabled: node.getMetadata('media') ? true : false,
@@ -2573,16 +2884,16 @@ winkstart.module('voip', 'callflow', {
                                             node.deleteMetadata('media');
                                         }
 
-                                        node.caption = 'SIP Code: ' + $('#response_code_input', popup_html).val();
+                                        node.caption = _t('callflow', 'sip_code_caption') + $('#response_code_input', popup_html).val();
 
                                         popup.dialog('close');
                                     } else {
-                                        winkstart.alert('error','Please enter a valide SIP code.');
+                                        winkstart.alert('error', _t('callflow', 'please_enter_a_valide_sip_code'));
                                     }
                                 });
 
                                 popup = winkstart.dialog(popup_html, {
-                                    title: 'Response',
+                                    title: _t('callflow', 'response_title'),
                                     minHeight: '0',
                                     beforeClose: function() {
                                         if(typeof callback == 'function') {
@@ -2599,7 +2910,7 @@ winkstart.module('voip', 'callflow', {
             /* Migration callflows, fixes our goofs. To be removed eventually */
             $.extend(callflow_nodes, {
                 'resource[]': {
-                    name: 'Resource',
+                    name: _t('callflow', 'resource_name'),
                     icon: 'resource',
                     module: 'resources',
                     data: {},
@@ -2611,14 +2922,14 @@ winkstart.module('voip', 'callflow', {
                     ],
                     isUsable: 'true',
                     caption: function(node, caption_map) {
-                        winkstart.alert('This callflow is outdated, please resave this callflow before continuing.');
+                        winkstart.alert(_t('callflow', 'this_callflow_is_outdated'));
                         return '';
                     },
                     edit: function(node, callback) {
                     }
                 },
                 'hotdesk[id=*,action=call]': {
-                    name: 'Hot Desking',
+                    name: _t('callflow', 'hot_desking_name'),
                     icon: 'v_phone',
                     module: 'hotdesk',
                     data: {
@@ -2636,7 +2947,7 @@ winkstart.module('voip', 'callflow', {
                         //Migration here:
                         node.setMetadata('action', 'bridge');
 
-                        winkstart.alert('This callflow is outdated, please resave this callflow before continuing.');
+                        winkstart.alert(_t('callflow', 'this_callflow_is_outdated'));
                         return '';
                     },
                     edit: function(node, callback) {

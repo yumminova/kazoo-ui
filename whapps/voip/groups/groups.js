@@ -63,10 +63,10 @@ winkstart.module('voip', 'groups', {
         winkstart.publish('whappnav.subnav.add', {
             whapp: 'voip',
             module: THIS.__module,
-            label: 'Groups',
+            label: _t('groups', 'groups_label'),
             icon: 'user',
             weight: '60',
-            category: 'advanced'
+            category: _t('config', 'advanced_menu_cat')
         });
     },
 
@@ -141,6 +141,7 @@ winkstart.module('voip', 'groups', {
                 },
                 defaults = {
                     data: $.extend(true, {
+                    	endpoints: {},
                         music_on_hold: {}
                     }, data_defaults || {}),
                     field_data: {}
@@ -195,6 +196,8 @@ winkstart.module('voip', 'groups', {
                         render_data = $.extend(true, defaults, results.groups_get);
                     }
 
+                    render_data = THIS.format_data(render_data);
+
                     THIS.render_groups(render_data, target, callbacks);
 
                     if(typeof callbacks.after_render == 'function') {
@@ -228,6 +231,9 @@ winkstart.module('voip', 'groups', {
         },
 
         render_groups: function(data, target, callbacks){
+			data._t = function(param){
+				return window.translate['groups'][param];
+			};
             var THIS = this,
                 groups_html = THIS.templates.edit.tmpl(data);
 
@@ -266,7 +272,7 @@ winkstart.module('voip', 'groups', {
                         THIS.save_groups(form_data, data, callbacks.save_success, winkstart.error_message.process_error(callbacks.save_error));
                     },
                     function() {
-                        winkstart.alert('There were errors on the form, please correct!');
+                        winkstart.alert(_t('groups', 'there_were_errors_on_the_form'));
                     }
                 );
             });
@@ -274,53 +280,68 @@ winkstart.module('voip', 'groups', {
             $('.group-delete', groups_html).click(function(ev) {
                 ev.preventDefault();
 
-                winkstart.confirm('Are you sure you want to delete this groups?', function() {
+                winkstart.confirm(_t('groups', 'are_you_sure_you_want_to_delete'), function() {
                     THIS.delete_groups(data, callbacks.delete_success, callbacks.delete_error);
                 });
             });
 
-            var add_user = function() {
+            add_user = function() {
                 var $user = $('#select_user_id', groups_html);
 
                 if($user.val() != 'empty_option_user') {
-                    var user_id = $user.val(),
-                        user_data = {
-                            endpoint_id: user_id,
-                            endpoint_type: 'user',
-                            endpoint_name: $('#option_endpoint_'+user_id, groups_html).text(),
-                        };
+                    var user_id = $user.val();
 
-                    if($('#row_no_data', groups_html).size() > 0) {
-                        $('#row_no_data', groups_html).remove();
-                    }
+                    $.each(data.field_data.users, function(k, v) {
+                        if(user_id === v.id) {
+                            var user_data = {
+                                endpoint_id: user_id,
+                                endpoint_type: 'user',
+                                endpoint_name: v.first_name + ' ' + v.last_name,
+                            };
 
-                    $('.rows', groups_html).prepend(THIS.templates.endpoint_row.tmpl(user_data));
-                    $('#option_endpoint_'+user_id, groups_html).hide();
+                            data.data.endpoints.push(user_data);
 
-                    $user.val('empty_option_user');
+                            data.data.endpoints.sort(function(a,b){
+                                return a.endpoint_name.toLowerCase() > b.endpoint_name.toLowerCase();
+                            });
+
+                            THIS.render_endpoint_list(data, groups_html);
+
+                            $user.val('empty_option_user');
+                        }
+
+                    });
                 }
+
             },
             add_device = function() {
                 var $device = $('#select_device_id', groups_html);
 
                 if($device.val() != 'empty_option_device') {
-                    var device_id = $device.val(),
-                        device_data = {
-                            endpoint_id: device_id,
-                            endpoint_type: 'device',
-                            endpoint_name: $('#option_endpoint_'+device_id, groups_html).text(),
-                        };
+                    var device_id = $device.val();
 
-                    if($('#row_no_data', groups_html).size() > 0) {
-                        $('#row_no_data', groups_html).remove();
-                    }
+                    $.each(data.field_data.devices, function(k, v){
+                        if(device_id === v.id) {
+                            var device_data = {
+                                endpoint_id: device_id,
+                                endpoint_type: 'device',
+                                endpoint_name: v.name,
+                            };
 
-                    $('.rows', groups_html).prepend(THIS.templates.endpoint_row.tmpl(device_data));
-                    $('#option_endpoint_'+device_id, groups_html).hide();
+                            data.data.endpoints.push(device_data);
 
-                    $device.val('empty_option_device');
+                            data.data.endpoints.sort(function(a,b){
+                                return a.endpoint_name.toLowerCase() > b.endpoint_name.toLowerCase();
+                            });
+
+                            THIS.render_endpoint_list(data, groups_html);
+
+                            $device.val('empty_option_device');
+                        }
+
+                    });
                 }
-            };
+            },
 
             $('#select_user_id', groups_html).change(function() {
                 add_user();
@@ -373,13 +394,65 @@ winkstart.module('voip', 'groups', {
                 $('#option_endpoint_'+endpoint_id, groups_html).show();
                 //if grid empty, add no data line
                 if($('.rows .row', groups_html).size() === 0) {
-                    $('.rows', groups_html).append(THIS.templates.endpoint_row.tmpl());
+                    $('.rows', groups_html).append(THIS.templates.endpoint_row.tmpl({
+						_t: function(param){
+							return window.translate['groups'][param];
+						}
+					}));
                 }
+
+				/* TODO For some reason splice doesn't work and I don't have time to make it better for now */
+                var new_list = [];
+
+                $.each(data.data.endpoints, function(k, v) {
+                    if(!(v.endpoint_id === endpoint_id)) {
+                        new_list.push(v);
+                    }
+                });
+
+                data.data.endpoints = new_list;
             });
 
             (target)
                 .empty()
                 .append(groups_html);
+        },
+
+        format_data: function(data){
+	        var user_item,
+	            list_endpoint = [];
+
+	        $.each(data.field_data.users, function(k, v) {
+	            if(v.id in data.data.endpoints) {
+	                endpoint_item = {
+	                    endpoint_type: 'user',
+	                    endpoint_id: v.id,
+	                    endpoint_name: v.first_name + ' ' + v.last_name,
+	                };
+
+	                list_endpoint.push(endpoint_item);
+	            }
+	        });
+
+	        $.each(data.field_data.devices, function(k, v) {
+	            if(v.id in data.data.endpoints) {
+	                endpoint_item = {
+	                    endpoint_type: 'device',
+	                    endpoint_id: v.id,
+	                    endpoint_name: v.name,
+	                };
+
+	                list_endpoint.push(endpoint_item);
+	            }
+	        });
+
+	        list_endpoint.sort(function(a,b){
+	            return a.endpoint_name.toLowerCase() > b.endpoint_name.toLowerCase();
+	        });
+
+	        data.data.endpoints = list_endpoint;
+
+			return data;
         },
 
         normalize_data: function(form_data) {
@@ -424,7 +497,7 @@ winkstart.module('voip', 'groups', {
                             $.each(data, function(key, val) {
                                 new_list.push({
                                     id: val.id,
-                                    title: val.name || '(no name)'
+                                    title: val.name || _t('groups', 'no_name')
                                 });
                             });
                         }
@@ -439,9 +512,9 @@ winkstart.module('voip', 'groups', {
                     $('#groups-listpanel', parent)
                         .empty()
                         .listpanel({
-                            label: 'Directories',
+                            label: _t('groups', 'groups_label'),
                             identifier: 'groups-listview',
-                            new_entity_label: 'Add Group',
+                            new_entity_label: _t('groups', 'add_group_label'),
                             data: map_crossbar_data(data.data),
                             publisher: winkstart.publish,
                             notifyMethod: 'groups.edit',
@@ -466,37 +539,21 @@ winkstart.module('voip', 'groups', {
         render_endpoint_list: function(data, parent) {
             var THIS = this;
 
-            if('endpoints' in data.data && !($.isEmptyObject(data.data.endpoints))) {
-                var user_item;
-                $.each(data.field_data.users, function(k, v) {
-                    if(v.id in data.data.endpoints) {
-                        endpoint_item = {
-                            endpoint_type: 'user',
-                            endpoint_id: v.id,
-                            endpoint_name: v.first_name + ' ' + v.last_name,
-                        };
+            $('.rows', parent).empty();
 
-                        $('.rows', parent).append(THIS.templates.endpoint_row.tmpl(endpoint_item));
-                        $('#option_endpoint_'+v.id, parent).hide();
-                    }
-                });
-
-                $.each(data.field_data.devices, function(k, v) {
-                    if(v.id in data.data.endpoints) {
-                        endpoint_item = {
-                            endpoint_type: 'device',
-                            endpoint_id: v.id,
-                            endpoint_name: v.name,
-                        };
-
-                        $('.rows', parent).append(THIS.templates.endpoint_row.tmpl(endpoint_item));
-                        $('#option_endpoint_'+v.id, parent).hide();
-                    }
+            if('endpoints' in data.data && data.data.endpoints.length > 0) {
+                $.each(data.data.endpoints, function(k, item){
+                    $('.rows', parent).append(THIS.templates.endpoint_row.tmpl(item));
+                    $('#option_endpoint_'+item.endpoint_id, parent).hide();
                 });
             }
             else {
                 $('.rows', parent).empty()
-                                  .append(THIS.templates.endpoint_row.tmpl({}));
+                                  .append(THIS.templates.endpoint_row.tmpl({
+									_t: function(param){
+										return window.translate['groups'][param];
+									}
+								  }));
             }
         },
 
@@ -522,7 +579,7 @@ winkstart.module('voip', 'groups', {
                 },
                 after_render: function() {
                     popup = winkstart.dialog(popup_html, {
-                        title: (data.id) ? 'Edit Groups' : 'Create Groups'
+                        title: (data.id) ? _t('groups', 'edit_groups') : _t('groups', 'create_groups')
                     });
                 }
             }, data_defaults);

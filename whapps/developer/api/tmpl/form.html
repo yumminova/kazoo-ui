@@ -21,24 +21,24 @@
 					</button>
 					<small>
 						{{if verb == "get_all"}}
-							Get All
+							${_t('get_all')}
 						{{/if}}
 						{{if verb == "post"}}
-							Update
+							${_t('update')}
 						{{/if}}
 						{{if verb == "put"}}
-							Add
+							${_t('add')}
 						{{/if}}
 						{{if verb == "delete"}}
-							Delete
+							${_t('delete')}
 						{{/if}}
 						{{if verb == "get"}}
-							Get
+							${_t('get')}
 						{{/if}}
 						${api.title}
 					</small>
 					<small class="url_right">${ressources['developer.' + k + '.' + verb].url.substr(9)}</small>
-					<!-- moved .toggled into .whapp-header... was outside .whapp-header but inside .row -->	
+					<!-- moved .toggled into .whapp-header... was outside .whapp-header but inside .row -->
 					<div class="toggled" id="${k}_${verb}">
 						<form action="#" id="${k}_${verb}_form">
 							<div class="request-contentWrap">
@@ -90,36 +90,36 @@
 										</tr>
 									</tbody>
 								</table> <!-- was end .pill-content, now end .api-infoTable -->
-									
+
 									<!-- ******** NOT SURE WHERE TO PUT THESE YET ******
 									{{if api.rest}}
 										{{if api.rest[verb]}}
 											{{each(index, class_type)  api.rest[verb]}}
 												<div class="${class_type}"></div>
 												{{if class_type == "schema"}}
-													<a class="details" data-id="${k}_${verb}">Show Advanced</a>	
+													<a class="details" data-id="${k}_${verb}">Show Advanced</a>
 												{{/if}}
 											{{/each}}
 										{{/if}}
 									{{/if}}
-									
+
 									{{if rests[verb].class}}
 										{{each(index, class_type) rests[verb].class}}
 											<div class="${class_type}"></div>
 											{{if class_type == "schema"}}
-												<a class="details" data-id="${k}_${verb}">Show Advanced</a>	
+												<a class="details" data-id="${k}_${verb}">Show Advanced</a>
 											{{/if}}
 										{{/each}}
 									{{/if}} -->
-								
+
 
 								<div class="buttons-left">
 									<button class="TestAPI-btn try" data-id="${k}" data-verb="${verb}">Test API Call</button>
 									<div class="clean" style="display: none;" data-id="${k}_${verb}">Clear Results</div>
-								</div> 
+								</div>
 
 								<div class="result">
-									
+
 									<!-- ********** REQUEST URL *********** -->
 									<div class="result-row">
 										<div class="result-header">
@@ -134,7 +134,7 @@
 										</div>
 
 										<pre>www.blahblahblah.com/moreblah/endblah</pre>
-									</div> 
+									</div>
 
 									<!-- ********** RESPONSE CODE *********** -->
 									<div class="result-row">
@@ -159,7 +159,7 @@
 										</div>
 
 										<pre>404 (ERROR)!! This would the be area for Response Code</pre>
-									</div> 
+									</div>
 
 									<!-- ********** RESPONSE HEADERS *********** -->
 									<div class="result-row">
@@ -221,19 +221,19 @@
 
 										<pre>SAMPLE CODE per SELECTED FORMAT</pre>
 									</div> <!-- end .result-row -->
-									
+
 									<div class="result_content"></div>
 								</div> <!-- end .result -->
-							</div> <!-- end request-contentWrap -->	
+							</div> <!-- end request-contentWrap -->
 						</form>
 
-						
+
 					</div> <!-- end .toggled -->
 
 				</div> <!-- end .whapp-header -->
-				
+
 			</div> <!-- end .row -->
 		{{/each}}
 	{{/each}}
-	
+
 </div>

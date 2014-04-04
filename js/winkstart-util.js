@@ -54,9 +54,9 @@
             options = {},
             ok = false;
 
-        html = $('<div class="center"><div class="alert_img confirm_alert"></div><div class="alert_text_wrapper info_alert"><span>' + content + '</span></div><div class="clear"/><div class="alert_buttons_wrapper"><button id="confirm_button" class="btn success confirm_button">OK</button><button id="cancel_button" class="btn danger confirm_button">Cancel</button></div></div>');
+        html = $('<div class="center"><div class="alert_img confirm_alert"></div><div class="alert_text_wrapper info_alert"><span>' + content + '</span></div><div class="clear"/><div class="alert_buttons_wrapper"><button id="confirm_button" class="btn success confirm_button">' + _t('config', 'OK') + '</button><button id="cancel_button" class="btn danger confirm_button">' + _t('config', 'CANCEL') + '</button></div></div>');
 
-        options.title = 'Please confirm';
+        options.title = _t('config', 'please_confirm_title');
         options.maxWidth = '400px';
         options.width = '400px';
         options.onClose = function() {
@@ -86,6 +86,91 @@
         return popup;
     };
 
+    winkstart.charges = function(data, callback_ok, callback_cancel) {
+        var html,
+            popup,
+            ok = false,
+            activation_charges = (typeof data.activation_charges) ? null : data.activation_charges,
+            activation_charges_description = (typeof data.activation_charges_description === "undefined") ? null : data.activation_charges_description.replace("_", " "),
+            dataTemplate,
+            content,
+            options = {
+                title: _t('config', 'charges_summary_title'),
+                maxWidth: 'auto',
+                width: 'auto',
+                onClose: function() {
+                    if (ok) {
+                        if (typeof callback_ok == 'function') {
+                            callback_ok();
+                        }
+                    } else {
+                        if (typeof callback_cancel == 'function') {
+                            callback_cancel();
+                        }
+                    }
+                }
+            },
+            formatData = function(data) {
+                var totalAmount = 0,
+                    charges_description = data.activation_charges_description,
+                    renderData = [];
+
+                $.each(data, function(categoryName, category) {
+                    if (categoryName != 'activation_charges' && categoryName != 'activation_charges_description') {
+                        $.each(category, function(itemName, item) {
+                            var discount = item.single_discount_rate + (item.cumulative_discount_rate * item.cumulative_discount),
+                                monthlyCharges = parseFloat(((item.rate * item.quantity) - discount) || 0).toFixed(2);
+
+                            renderData.push({
+                                service: itemName.toUpperCase().replace("_"," "),
+                                rate: item.rate || 0,
+                                quantity: item.quantity || 0,
+                                discount: discount > 0 ? '- $' + parseFloat(discount).toFixed(2) : '',
+                                monthlyCharges: monthlyCharges < 0 ? '- $' + Math.abs(monthlyCharges).toFixed(2) : '$' + monthlyCharges
+                            });
+
+                            totalAmount += parseFloat(monthlyCharges);
+                        });
+                    }
+                });
+
+                var sortByPrice = function(a, b) {
+                    return parseFloat(a.monthlyCharges) >= parseFloat(b.monthlyCharges) ? -1 : 1;
+                };
+
+                renderData.sort(sortByPrice);
+
+                return renderData;
+            };
+
+        dataTemplate = formatData(data)[0];
+
+        content = _t('config', 'content_charges');
+
+        if ( activation_charges !== null && activation_charges_description !== null ) {
+            if ( activation_charges === 0 ) {
+                content = _t('config', 'there_is_no') + activation_charges_description + '. ';
+            } else {
+                content = _t('config', 'you_will_pay') + activation_charges + _t('config', 'one_time') + activation_charges_description + '. ';
+            }
+        }
+
+        html = $('<div class="center"><div class="alert_img confirm_alert"></div><div class="alert_text_wrapper info_alert charges-info">' + content + '</div><div class="alert_text_wrapper info_alert"><table class="charges-summary"><thead><tr><th>' + _t('config', 'service') + '</th><th>' + _t('config', 'rate') + '</th><th></th><th>' + _t('config', 'quantity') + '</th><th>' + _t('config', 'discount') + '</th><th>' + _t('config', 'monthly_charges') + '</th></tr></thead><tbody><tr><td>' + dataTemplate.service + '</td><td>$' + dataTemplate.rate + '</td><td>X</td><td>' + dataTemplate.quantity + '</td><td>' + dataTemplate.discount + '</td><td>$' + dataTemplate.monthlyCharges + '</td></tr></tbody></table></div><div class="alert_text_wrapper info_alert charges-info">' + _t('config', 'press_OK_or_Cancel') + '</div><div class="clear"/><div class="alert_buttons_wrapper"><button id="confirm_button" class="btn success confirm_button">' + _t('config', 'OK') + '</button><button id="cancel_button" class="btn danger confirm_button">' + _t('config', 'CANCEL') + '</button></div></div>');
+
+        popup = winkstart.dialog(html, options);
+
+        $('#confirm_button', html).click(function() {
+            ok = true;
+            popup.dialog('close');
+        });
+
+        $('#cancel_button', html).click(function() {
+            popup.dialog('close');
+        });
+
+        return popup;
+    };
+
     winkstart.alert = function(type, content, callback) {
         var html,
             popup,
@@ -100,7 +185,7 @@
         if(type_temp == 'error') {
             html = $('<div class="center"><div class="alert_img error_alert"></div><div class="alert_text_wrapper error_alert"><span>' +
                 content +
-                '</span></div><div class="clear"/><div class="alert_buttons_wrapper"><button class="btn primary alert_button">Close</button></div></div>');
+                '</span></div><div class="clear"/><div class="alert_buttons_wrapper"><button class="btn primary alert_button">' + _t('config', 'CLOSE') + '</button></div></div>');
 
             if(content && content.data) {
                 html = $('<div class="center"><div class="alert_img error_alert"></div><div class="alert_text_wrapper error_alert"><span><p>' +
@@ -108,17 +193,17 @@
                     '<p>' +
                     '<p><button class="btn small danger json">Show Errors</button>' +
                     '</p><p style="display:none" class="json_error"></p>' +
-                    '</span></div><div class="clear"/><div class="alert_buttons_wrapper"><button class="btn primary alert_button">Close</button></div></div>');
+                    '</span></div><div class="clear"/><div class="alert_buttons_wrapper"><button class="btn primary alert_button">' + _t('config', 'CLOSE') + '</button></div></div>');
             }
         }
         else if(type_temp == 'info'){
-            html = $('<div class="center"><div class="alert_img info_alert"></div><div class="alert_text_wrapper info_alert"><span>' + content + '</span></div><div class="clear"/><div class="alert_buttons_wrapper"><button class="btn primary alert_button">Close</button></div></div>');
+            html = $('<div class="center"><div class="alert_img info_alert"></div><div class="alert_text_wrapper info_alert"><span>' + content + '</span></div><div class="clear"/><div class="alert_buttons_wrapper"><button class="btn primary alert_button">' + _t('config', 'CLOSE') + '</button></div></div>');
         }
         else {
             callback = content;
             content = type;
-            type_temp = 'warning';
-            html = $('<div class="center"><div class="alert_img warning_alert"></div><div class="alert_text_wrapper warning_alert"><span>' + content + '</span></div><div class="clear"/><div class="alert_buttons_wrapper"><button class="btn primary alert_button">Close</button></div></div>');
+            type_temp = _t('config', 'WARNING');
+            html = $('<div class="center"><div class="alert_img warning_alert"></div><div class="alert_text_wrapper warning_alert"><span>' + content + '</span></div><div class="clear"/><div class="alert_buttons_wrapper"><button class="btn primary alert_button">' + _t('config', 'CLOSE') + '</button></div></div>');
         }
 
         options.title = type_temp.charAt(0).toUpperCase() + type_temp.slice(1);
@@ -264,22 +349,30 @@
 
     winkstart.link_form = function(html){
         $('input', html).bind('change.link keyup.link focus.link', function() {
-            var name = $(this).attr('name'),
-                type = $(this).attr('type'),
-                value = $(this).val(),
+            var input = $(this),
+            	name = input.attr('name'),
+                type = input.attr('type'),
+                value = input.val(),
+                id = input.attr('id'),
                 input_fields = $('input[name="' + name + '"]', html);
 
             if(input_fields.size() > 1) {
                 if(type == 'checkbox'){
                     input_fields = input_fields.filter('[value='+value+']');
-                    ($(this).attr('checked')) ? input_fields.attr('checked', 'checked') : input_fields.removeAttr('checked');
+                    (input.attr('checked')) ? input_fields.attr('checked', 'checked') : input_fields.removeAttr('checked');
                 }
                 else {
-                    input_fields.val($(this).val());
+                	$.each(input_fields, function(k, v) {
+                		var element = $(v);
+
+                		if(element.attr('id') !== id) {
+                			element.val(value);
+						}
+                	});
                 }
             }
             else {
-                $(this).unbind('.link');
+                input.unbind('.link');
             }
         });
     };
@@ -328,13 +421,13 @@
             if(state) {
                 btn.addClass('activated');
                 if(change_name != false) {
-                    btn.html('Hide');
+                    btn.html(_t('config','hide'));
                 }
                 div.slideDown();
             } else {
                 btn.removeClass('activated');
                 if(change_name != false) {
-                    btn.html('Show');
+                    btn.html(_t('config','show'));
                 }
                 div.slideUp();
             }
@@ -503,14 +596,7 @@
         async.parallel(
             list_functions,
             function(err, results) {
-                if(err) {
-                    var error_string = 'An API Call (' + err.api_name + ') failed.';
-
-                    winkstart.alert(error_string);
-                }
-                else {
-                    callback(err, results);
-                }
+                callback(err, results);
             }
         );
     };
